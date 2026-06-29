@@ -5,6 +5,8 @@ import { BottomTabBar } from '@/components/BottomTabBar';
 import { TopNav } from '@/components/TopNav';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { AmbientPlayer } from '@/components/audio/AmbientPlayer';
+import { ServiceWorkerRegister } from '@/components/pwa/ServiceWorkerRegister';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -31,8 +33,12 @@ export const metadata: Metadata = {
   authors: [{ name: 'Selah' }],
   manifest: '/manifest.webmanifest',
   icons: {
-    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
-    apple: [{ url: '/icon.svg' }],
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icons/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
   },
   appleWebApp: {
     capable: true,
@@ -65,6 +71,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <SmoothScroll />
+        <ServiceWorkerRegister />
+        <InstallPrompt />
         <TopNav />
         {/* Mobile: room for the bottom tab bar. Desktop: room for the top bar. */}
         <div id="content" className="relative mx-auto min-h-dvh w-full max-w-3xl pb-28 md:pb-16 md:pt-20">

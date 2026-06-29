@@ -49,4 +49,5 @@ export const STORAGE_KEYS = {
   settings: 'selah:settings:v1',
   readingPlan: 'selah:reading-plan:v1',
   sound: 'selah:sound:v1',
+  installDismissed: 'selah:install-dismissed:v1',
 } as const;

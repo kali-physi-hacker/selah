@@ -13,6 +13,7 @@ import {
   Circle,
   Compass,
   Crown,
+  Download,
   Eye,
   Feather,
   Flag,
@@ -30,6 +31,7 @@ import {
   Quote,
   RotateCcw,
   Search,
+  Share,
   Sparkles,
   Star,
   Sun,
@@ -84,6 +86,8 @@ const ICONS: Record<string, LucideIcon> = {
   pause: Pause,
   'volume-on': Volume2,
   'volume-off': VolumeX,
+  share: Share,
+  download: Download,
 };
 
 export interface IconProps {
