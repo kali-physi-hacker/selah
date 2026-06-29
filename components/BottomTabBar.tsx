@@ -3,14 +3,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from './Icon';
+import { AUTH_ENABLED } from '@/lib/authEnabled';
 
 const TABS = [
   { href: '/', label: 'Journey', icon: 'compass' },
   { href: '/read', label: 'Read', icon: 'book-open' },
   { href: '/search', label: 'Search', icon: 'search' },
   { href: '/bookmarks', label: 'Saved', icon: 'bookmark' },
+  ...(AUTH_ENABLED ? [{ href: '/account', label: 'Account', icon: 'account' }] : []),
   { href: '/about', label: 'More', icon: 'more' },
-] as const;
+];
 
 function isActive(pathname: string, href: string): boolean {
   if (href === '/') return pathname === '/';

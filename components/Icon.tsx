@@ -8,6 +8,7 @@ import {
   Check,
   CheckCircle2,
   ChevronDown,
+  CircleUser,
   ChevronLeft,
   ChevronRight,
   Circle,
@@ -88,6 +89,7 @@ const ICONS: Record<string, LucideIcon> = {
   'volume-off': VolumeX,
   share: Share,
   download: Download,
+  account: CircleUser,
 };
 
 export interface IconProps {
