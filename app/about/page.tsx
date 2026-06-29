@@ -5,6 +5,7 @@ import { DataControls } from '@/components/about/DataControls';
 import { PageBackdrop } from '@/components/PageBackdrop';
 import { aboutScenery, IMAGE_CREDIT } from '@/lib/imagery';
 import { AMBIENT_TRACK_SRC, AMBIENT_CREDIT } from '@/lib/ambientAudio';
+import { AUTH_ENABLED } from '@/lib/authEnabled';
 import { Icon } from '@/components/Icon';
 
 export const metadata: Metadata = {
@@ -21,6 +22,16 @@ const HOW_TO = [
 ];
 
 const LINKS = [
+  ...(AUTH_ENABLED
+    ? [
+        {
+          href: '/account',
+          icon: 'sparkles',
+          title: 'Account',
+          body: 'Optional — sign in to sync across devices.',
+        },
+      ]
+    : []),
   { href: '/people', icon: 'users', title: 'People', body: 'The figures who carry the story.' },
   { href: '/glossary', icon: 'languages', title: 'Glossary', body: 'Hebrew & Greek words that unlock the text.' },
   { href: '/read', icon: 'book-open', title: 'Reading plan', body: 'Master the whole Bible in 30 days.' },

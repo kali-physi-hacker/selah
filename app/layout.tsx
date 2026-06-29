@@ -7,6 +7,8 @@ import { SmoothScroll } from '@/components/SmoothScroll';
 import { AmbientPlayer } from '@/components/audio/AmbientPlayer';
 import { ServiceWorkerRegister } from '@/components/pwa/ServiceWorkerRegister';
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
+import { AuthProvider } from '@/components/auth/AuthProvider';
+import { AUTH_ENABLED } from '@/lib/authEnabled';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -61,6 +63,13 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const content = (
+    // Mobile: room for the bottom tab bar. Desktop: room for the top bar.
+    <div id="content" className="relative mx-auto min-h-dvh w-full max-w-3xl pb-28 md:pb-16 md:pt-20">
+      {children}
+    </div>
+  );
+
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body>
@@ -74,10 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ServiceWorkerRegister />
         <InstallPrompt />
         <TopNav />
-        {/* Mobile: room for the bottom tab bar. Desktop: room for the top bar. */}
-        <div id="content" className="relative mx-auto min-h-dvh w-full max-w-3xl pb-28 md:pb-16 md:pt-20">
-          {children}
-        </div>
+        {AUTH_ENABLED ? <AuthProvider>{content}</AuthProvider> : content}
         <AmbientPlayer />
         <BottomTabBar />
       </body>

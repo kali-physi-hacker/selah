@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { AUTH_ENABLED } from '@/lib/authEnabled';
 
 const LINKS = [
   { href: '/', label: 'Journey' },
@@ -11,7 +12,8 @@ const LINKS = [
   { href: '/people', label: 'People' },
   { href: '/glossary', label: 'Glossary' },
   { href: '/about', label: 'About' },
-] as const;
+  ...(AUTH_ENABLED ? [{ href: '/account', label: 'Account' }] : []),
+];
 
 function isActive(pathname: string, href: string): boolean {
   if (href === '/') return pathname === '/' || pathname.startsWith('/act');
