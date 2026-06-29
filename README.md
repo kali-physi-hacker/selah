@@ -84,7 +84,30 @@ Zero config. Either:
 - **Import the repo** at [vercel.com/new](https://vercel.com/new) — Vercel auto-detects Next.js, or
 - **CLI:** `npm i -g vercel && vercel`
 
-No environment variables or external services are required for v1.
+No environment variables or external services are required for the core app.
+
+## Optional accounts & cloud sync
+
+Auth is **fully optional** — Selah works anonymously with everything in `localStorage`.
+Turning it on adds Google sign-in and syncs bookmarks/progress/notes across devices via
+Postgres. It's gated behind `NEXT_PUBLIC_AUTH_ENABLED`, so until it's set the app has no
+auth code paths at all. Stack: Auth.js (NextAuth v5, Google, JWT) + Neon Postgres
+(`profiles` table, one JSON row per user) + a sync layer that merges local ↔ cloud on
+sign-in so logged-out work is never lost.
+
+To enable it (see `.env.example` for the full list):
+
+1. **Database** — Vercel project → **Storage → Create Database → Neon**. This auto-adds
+   `DATABASE_URL`. (The `profiles` table is created on first use; no migrations.)
+2. **Google OAuth** — Google Cloud Console → **Credentials → OAuth client ID → Web app**.
+   Authorized redirect URIs:
+   - `https://<your-domain>/api/auth/callback/google`
+   - `http://localhost:3000/api/auth/callback/google`
+3. **Env vars** (Vercel → Settings → Environment Variables, Production):
+   `AUTH_SECRET` (`openssl rand -base64 32`), `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, and
+   `NEXT_PUBLIC_AUTH_ENABLED=true`. Then **redeploy** (the public flag is build-time inlined).
+
+The store is swappable: `lib/db.ts` is a thin Postgres layer you could repoint or replace.
 
 ## Project structure
 
