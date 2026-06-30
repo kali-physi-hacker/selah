@@ -1,7 +1,6 @@
 'use client';
 
 import { useSession, signIn, signOut } from 'next-auth/react';
-import Image from 'next/image';
 import { Icon } from '@/components/Icon';
 
 /** The official multi-color Google "G". */
@@ -42,12 +41,16 @@ export function AccountClient() {
         <div className="rounded-card glass-strong p-5">
           <div className="flex items-center gap-4">
             {image ? (
-              <Image
+              // OAuth avatars: a plain <img> avoids the image-optimizer host allowlist,
+              // and no-referrer stops Google (lh3.googleusercontent.com) returning 403.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 src={image}
                 alt=""
                 width={56}
                 height={56}
-                className="flex-none rounded-full ring-1 ring-white/20"
+                referrerPolicy="no-referrer"
+                className="h-14 w-14 flex-none rounded-full object-cover ring-1 ring-white/20"
               />
             ) : (
               <span className="flex h-14 w-14 flex-none items-center justify-center rounded-full bg-white/10 font-display text-2xl text-ink">
