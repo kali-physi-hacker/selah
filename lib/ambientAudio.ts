@@ -33,16 +33,58 @@ export const AMBIENT_TRACKS: AmbientTrack[] = [
     src: '/audio/rest-in-jesus.mp3',
     credit: '“REST IN JESUS” — soaking worship instrumental by Blessed Moment.',
   },
-  // Drop more instrumentals here, e.g.:
-  // { id: 'still-waters', label: 'Still Waters', kind: 'file', src: '/audio/still-waters.mp3', credit: '…' },
+  {
+    id: 'ruach',
+    label: 'Ruach',
+    kind: 'file',
+    src: '/audio/ruach.mp3',
+    credit: 'Prophetic worship & meditation instrumental.',
+  },
+  {
+    id: 'sabaoth',
+    label: 'Sabaoth',
+    kind: 'file',
+    src: '/audio/sabaoth.mp3',
+    credit: 'Prophetic worship & meditation instrumental.',
+  },
+  {
+    id: 'speak-lord',
+    label: 'Speak, Lord',
+    kind: 'file',
+    src: '/audio/speak-lord.mp3',
+    credit: 'Prophetic worship — “Speak Lord, I Am Listening.”',
+  },
+  {
+    id: 'spirit-touch-me',
+    label: 'Spirit, Touch Me',
+    kind: 'file',
+    src: '/audio/spirit-touch-me.mp3',
+    credit: 'Prophetic warfare prayer instrumental.',
+  },
+  {
+    id: 'intercession',
+    label: 'Intercession',
+    kind: 'file',
+    src: '/audio/intercession.mp3',
+    credit: 'Soaking prayer instrumental — Herikant.',
+  },
+  {
+    id: 'holy-fire',
+    label: 'Holy Fire',
+    kind: 'file',
+    src: '/audio/holy-fire.mp3',
+    credit: 'Deep soaking prayer — harp instrumental.',
+  },
+  // Drop more instrumentals here: add /public/audio/<file>.mp3 and one entry above.
 ];
 
 export const DEFAULT_TRACK_ID = 'rest-in-jesus';
 export const SOUND_TRACK_KEY = 'selah:sound-track:v1';
 
 export const AMBIENT_ATTRIBUTION =
-  'Ambient music: a generative worship pad, plus “REST IN JESUS” by Blessed Moment ' +
-  '(youtube.com/@BlessedMomentYT). Choose your soundscape in Settings.';
+  'Ambient music: a generative worship pad plus a set of prophetic worship & soaking-prayer ' +
+  'instrumentals (including “Rest in Jesus” by Blessed Moment, and works credited to Herikant ' +
+  'and others). Choose your soundscape in Settings.';
 
 export interface AmbientController {
   /** Start (must be called from a user gesture so the browser allows audio). */
