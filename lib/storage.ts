@@ -58,4 +58,5 @@ export const STORAGE_KEYS = {
   notebook: 'selah:notebook:v1',
   prayerStats: 'selah:prayer-stats:v1',
   revelations: 'selah:revelations:v1',
+  metronome: 'selah:metronome:v1',
 } as const;

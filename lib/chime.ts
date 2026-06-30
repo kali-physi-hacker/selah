@@ -43,6 +43,23 @@ export function playChime(base = 528, gain = 0.22): void {
   }
 }
 
+/** A soft, short metronome tick — one per second during a session. */
+export function playTick(gain = 0.07): void {
+  const c = getCtx();
+  if (!c) return;
+  const now = c.currentTime;
+  const osc = c.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.value = 880;
+  const g = c.createGain();
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(gain, now + 0.004);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+  osc.connect(g).connect(c.destination);
+  osc.start(now);
+  osc.stop(now + 0.08);
+}
+
 /** Unlock the audio context within a gesture (so later timed chimes can play). */
 export function primeChime(): void {
   getCtx()?.resume().catch(() => {});

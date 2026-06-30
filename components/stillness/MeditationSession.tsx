@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { BreathOrb } from '@/components/three/BreathOrb';
-import { playChime, primeChime } from '@/lib/chime';
+import { playChime, primeChime, playTick } from '@/lib/chime';
 import { useMeditation } from '@/lib/useMeditation';
+import { readJSON, writeJSON, STORAGE_KEYS } from '@/lib/storage';
 import { track } from '@/lib/analytics';
 import { Icon } from '@/components/Icon';
 import { hexToRgba } from '@/lib/color';
@@ -24,8 +25,16 @@ export function MeditationSession({ accent = '#67E8F9' }: { accent?: string }) {
   const [phase, setPhase] = useState<Phase>('idle');
   const [minutes, setMinutes] = useState(5);
   const [remaining, setRemaining] = useState(0);
+  const [metronome, setMetronome] = useState(false);
   const { addMinutes } = useMeditation();
   const tick = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => setMetronome(readJSON<boolean>(STORAGE_KEYS.metronome, false)), []);
+  const toggleMetronome = () =>
+    setMetronome((m) => {
+      writeJSON(STORAGE_KEYS.metronome, !m);
+      return !m;
+    });
 
   const begin = () => {
     primeChime();
@@ -40,6 +49,11 @@ export function MeditationSession({ accent = '#67E8F9' }: { accent?: string }) {
     tick.current = setTimeout(() => setRemaining((r) => r - 1), 1000);
     return () => clearTimeout(tick.current);
   }, [phase, remaining]);
+
+  // metronome: a soft tick on every second while running
+  useEffect(() => {
+    if (phase === 'running' && metronome && remaining > 0) playTick();
+  }, [remaining, phase, metronome]);
 
   // completion
   useEffect(() => {
@@ -89,6 +103,10 @@ export function MeditationSession({ accent = '#67E8F9' }: { accent?: string }) {
             </button>
           ))}
         </div>
+        <label className="mt-4 flex items-center gap-2.5 text-sm text-ink-muted">
+          <input type="checkbox" checked={metronome} onChange={toggleMetronome} className="h-4 w-4 accent-aqua" />
+          Metronome — a soft tick each second
+        </label>
         <button
           onClick={begin}
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-card px-5 py-4 font-medium text-ink transition-transform active:scale-[0.99]"
@@ -151,6 +169,15 @@ export function MeditationSession({ accent = '#67E8F9' }: { accent?: string }) {
                 <Icon name="play" size={15} aria-hidden /> Resume
               </button>
             )}
+            <button
+              onClick={toggleMetronome}
+              aria-pressed={metronome}
+              title={metronome ? 'Metronome on' : 'Metronome off'}
+              className="flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-white/12"
+              style={metronome ? { background: hexToRgba(accent, 0.25), color: '#F0FDFA' } : { background: 'rgba(255,255,255,0.08)', color: 'rgba(240,253,250,0.6)' }}
+            >
+              <Icon name="hourglass" size={16} aria-hidden />
+            </button>
             <button onClick={endEarly} className="pill bg-white/8 px-5 py-2.5 text-sm text-ink-muted ring-1 ring-white/12">
               End
             </button>
