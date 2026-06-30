@@ -1,7 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { createAmbient, type AmbientController } from '@/lib/ambientAudio';
+import {
+  createAmbient,
+  DEFAULT_TRACK_ID,
+  SOUND_TRACK_KEY,
+  type AmbientController,
+} from '@/lib/ambientAudio';
 import { readJSON, writeJSON, STORAGE_KEYS } from '@/lib/storage';
 import { Icon } from '@/components/Icon';
 
@@ -16,11 +21,12 @@ export function AmbientPlayer() {
   const [hydrated, setHydrated] = useState(false);
   const ctrlRef = useRef<AmbientController | null>(null);
   const startedRef = useRef(false);
+  const trackRef = useRef<string>(DEFAULT_TRACK_ID);
 
   const enable = useCallback(async () => {
     if (startedRef.current) return;
     try {
-      ctrlRef.current = createAmbient();
+      ctrlRef.current = createAmbient(trackRef.current);
       await ctrlRef.current.start();
       startedRef.current = true;
     } catch {
@@ -33,6 +39,23 @@ export function AmbientPlayer() {
     ctrlRef.current = null;
     startedRef.current = false;
   }, []);
+
+  // Track which soundscape is selected; switch live if it changes while playing.
+  useEffect(() => {
+    trackRef.current = readJSON<string>(SOUND_TRACK_KEY, DEFAULT_TRACK_ID);
+    const onStorage = (e: Event) => {
+      if ((e as CustomEvent).detail?.key !== SOUND_TRACK_KEY) return;
+      const next = readJSON<string>(SOUND_TRACK_KEY, DEFAULT_TRACK_ID);
+      if (next === trackRef.current) return;
+      trackRef.current = next;
+      if (startedRef.current) {
+        disable();
+        void enable();
+      }
+    };
+    window.addEventListener('selah:storage', onStorage);
+    return () => window.removeEventListener('selah:storage', onStorage);
+  }, [enable, disable]);
 
   // Load saved preference; if "on", arm a one-time gesture to resume.
   useEffect(() => {

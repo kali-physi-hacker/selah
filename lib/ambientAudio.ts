@@ -7,11 +7,42 @@
  * set AMBIENT_TRACK_SRC below — the player will use it automatically.
  */
 
-export const AMBIENT_TRACK_SRC: string | null = '/audio/rest-in-jesus.mp3';
+/**
+ * The soundscape registry. Add a new track by dropping a file in /public/audio
+ * and appending an entry here — the picker and player pick it up automatically.
+ */
+export interface AmbientTrack {
+  id: string;
+  label: string;
+  kind: 'generative' | 'file';
+  src?: string;
+  credit?: string;
+}
 
-/** Credit shown when a real track is used (attribution for the artist). */
-export const AMBIENT_CREDIT =
-  '“REST IN JESUS” — soaking worship instrumental by Blessed Moment (youtube.com/@BlessedMomentYT).';
+export const AMBIENT_TRACKS: AmbientTrack[] = [
+  {
+    id: 'soaking-pad',
+    label: 'Soaking Pad',
+    kind: 'generative',
+    credit: 'Synthesized live — evolving worship chords. Nothing copyrighted.',
+  },
+  {
+    id: 'rest-in-jesus',
+    label: 'Rest in Jesus',
+    kind: 'file',
+    src: '/audio/rest-in-jesus.mp3',
+    credit: '“REST IN JESUS” — soaking worship instrumental by Blessed Moment.',
+  },
+  // Drop more instrumentals here, e.g.:
+  // { id: 'still-waters', label: 'Still Waters', kind: 'file', src: '/audio/still-waters.mp3', credit: '…' },
+];
+
+export const DEFAULT_TRACK_ID = 'rest-in-jesus';
+export const SOUND_TRACK_KEY = 'selah:sound-track:v1';
+
+export const AMBIENT_ATTRIBUTION =
+  'Ambient music: a generative worship pad, plus “REST IN JESUS” by Blessed Moment ' +
+  '(youtube.com/@BlessedMomentYT). Choose your soundscape in Settings.';
 
 export interface AmbientController {
   /** Start (must be called from a user gesture so the browser allows audio). */
@@ -265,6 +296,11 @@ class FilePad implements AmbientController {
   }
 }
 
-export function createAmbient(): AmbientController {
-  return AMBIENT_TRACK_SRC ? new FilePad(AMBIENT_TRACK_SRC) : new GenerativePad();
+export function createAmbient(trackId?: string): AmbientController {
+  const track =
+    AMBIENT_TRACKS.find((t) => t.id === trackId) ??
+    AMBIENT_TRACKS.find((t) => t.id === DEFAULT_TRACK_ID) ??
+    AMBIENT_TRACKS[0];
+  if (track.kind === 'file' && track.src) return new FilePad(track.src);
+  return new GenerativePad();
 }
