@@ -30,22 +30,34 @@ export default function HomePage() {
       </Reveal>
 
       <Reveal className="mt-4">
-        <Link
-          href="/stillness"
-          className="flex items-center gap-4 rounded-card glass p-5 transition-colors hover:bg-white/[0.08]"
-        >
-          <span
-            className="flex h-12 w-12 flex-none items-center justify-center rounded-full"
-            style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255,255,255,0.92), rgba(103,232,249,0.32) 60%, transparent)' }}
+        <div className="grid grid-cols-2 gap-3">
+          <Link
+            href="/stillness"
+            className="rounded-card glass p-4 transition-colors hover:bg-white/[0.08]"
           >
-            <Icon name="feather" size={20} aria-hidden className="text-abyss" />
-          </span>
-          <div className="flex-1">
-            <p className="font-display text-lg text-ink">Enter stillness</p>
-            <p className="text-sm text-ink-muted">Breathe, be still, and keep a quiet time.</p>
-          </div>
-          <Icon name="chevron-right" size={18} aria-hidden className="text-ink-faint" />
-        </Link>
+            <span
+              className="flex h-11 w-11 items-center justify-center rounded-full"
+              style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255,255,255,0.92), rgba(103,232,249,0.32) 60%, transparent)' }}
+            >
+              <Icon name="feather" size={19} aria-hidden className="text-abyss" />
+            </span>
+            <p className="mt-2.5 font-display text-base text-ink">Stillness</p>
+            <p className="text-xs text-ink-muted">Breathe & be still</p>
+          </Link>
+          <Link
+            href="/prayer"
+            className="rounded-card glass p-4 transition-colors hover:bg-white/[0.08]"
+          >
+            <span
+              className="flex h-11 w-11 items-center justify-center rounded-full"
+              style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255,255,255,0.92), rgba(253,230,138,0.4) 60%, transparent)' }}
+            >
+              <Icon name="flame" size={19} aria-hidden className="text-abyss" />
+            </span>
+            <p className="mt-2.5 font-display text-base text-ink">Prayer</p>
+            <p className="text-xs text-ink-muted">Pray & receive</p>
+          </Link>
+        </div>
       </Reveal>
 
       <div className="mt-9 mb-4 flex items-center gap-3 px-1">

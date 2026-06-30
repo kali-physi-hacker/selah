@@ -3,6 +3,9 @@ import type { ProgressState } from './useProgress';
 import type { Bookmark, NotesMap } from './useBookmarks';
 import type { Prayer } from './usePrayer';
 import type { MeditationStats } from './useMeditation';
+import type { HighlightMark } from './useHighlights';
+import type { Note } from './useNotebook';
+import type { PrayerStats, Revelation } from './usePrayerRoom';
 
 /**
  * The synced profile = the subset of local state we mirror to the cloud for
@@ -18,6 +21,10 @@ export interface ProfileData {
   prayer?: Prayer[];
   meditation?: MeditationStats;
   achievements?: string[];
+  highlights?: HighlightMark[];
+  notebook?: Note[];
+  prayerStats?: PrayerStats;
+  revelations?: Revelation[];
   // server-enriched (for the leaderboard) — never written from the client
   _name?: string;
   _image?: string;
@@ -33,6 +40,10 @@ export const SYNCED_KEYS: string[] = [
   STORAGE_KEYS.meditation,
   STORAGE_KEYS.achievements,
   STORAGE_KEYS.leaderboardOptOut,
+  STORAGE_KEYS.highlights,
+  STORAGE_KEYS.notebook,
+  STORAGE_KEYS.prayerStats,
+  STORAGE_KEYS.revelations,
 ];
 
 export function readLocalProfile(): ProfileData {
@@ -45,6 +56,10 @@ export function readLocalProfile(): ProfileData {
     meditation: readJSON<MeditationStats | undefined>(STORAGE_KEYS.meditation, undefined),
     achievements: readJSON<string[] | undefined>(STORAGE_KEYS.achievements, undefined),
     leaderboardOptOut: readJSON<boolean | undefined>(STORAGE_KEYS.leaderboardOptOut, undefined),
+    highlights: readJSON<HighlightMark[] | undefined>(STORAGE_KEYS.highlights, undefined),
+    notebook: readJSON<Note[] | undefined>(STORAGE_KEYS.notebook, undefined),
+    prayerStats: readJSON<PrayerStats | undefined>(STORAGE_KEYS.prayerStats, undefined),
+    revelations: readJSON<Revelation[] | undefined>(STORAGE_KEYS.revelations, undefined),
   };
 }
 
@@ -58,6 +73,10 @@ export function writeLocalProfile(p: ProfileData): void {
   if (p.achievements) writeJSON(STORAGE_KEYS.achievements, p.achievements);
   if (typeof p.leaderboardOptOut === 'boolean')
     writeJSON(STORAGE_KEYS.leaderboardOptOut, p.leaderboardOptOut);
+  if (p.highlights) writeJSON(STORAGE_KEYS.highlights, p.highlights);
+  if (p.notebook) writeJSON(STORAGE_KEYS.notebook, p.notebook);
+  if (p.prayerStats) writeJSON(STORAGE_KEYS.prayerStats, p.prayerStats);
+  if (p.revelations) writeJSON(STORAGE_KEYS.revelations, p.revelations);
 }
 
 const union = <T>(a?: T[], b?: T[]): T[] => Array.from(new Set([...(a ?? []), ...(b ?? [])]));
@@ -114,6 +133,36 @@ function mergeMeditation(a?: MeditationStats, b?: MeditationStats): MeditationSt
   };
 }
 
+/** Union two id'd lists, local winning on conflict. */
+function unionById<T extends { id: string }>(a?: T[], b?: T[]): T[] {
+  const byId = new Map<string, T>();
+  for (const x of b ?? []) byId.set(x.id, x);
+  for (const x of a ?? []) byId.set(x.id, x);
+  return Array.from(byId.values());
+}
+
+function mergeNotebook(a?: Note[], b?: Note[]): Note[] {
+  const byId = new Map<string, Note>();
+  for (const x of b ?? []) byId.set(x.id, x);
+  for (const x of a ?? []) {
+    const ex = byId.get(x.id);
+    byId.set(x.id, ex && ex.updatedAt > x.updatedAt ? ex : x);
+  }
+  return Array.from(byId.values()).sort((p, q) => (p.updatedAt < q.updatedAt ? 1 : -1));
+}
+
+function mergePrayerStats(a?: PrayerStats, b?: PrayerStats): PrayerStats | undefined {
+  if (!a) return b;
+  if (!b) return a;
+  return {
+    totalMinutes: Math.max(a.totalMinutes, b.totalMinutes),
+    sessions: Math.max(a.sessions, b.sessions),
+    lastDate: later(a.lastDate, b.lastDate),
+    days: Array.from(new Set([...a.days, ...b.days])).sort(),
+    cadence: (a.lastDate >= b.lastDate ? a.cadence : b.cadence) ?? a.cadence,
+  };
+}
+
 /** Merge two profiles. `local` takes precedence on genuine conflicts. */
 export function mergeProfiles(local: ProfileData, cloud: ProfileData): ProfileData {
   return {
@@ -125,5 +174,9 @@ export function mergeProfiles(local: ProfileData, cloud: ProfileData): ProfileDa
     meditation: mergeMeditation(local.meditation, cloud.meditation),
     achievements: union(local.achievements, cloud.achievements),
     leaderboardOptOut: local.leaderboardOptOut ?? cloud.leaderboardOptOut,
+    highlights: unionById(local.highlights, cloud.highlights),
+    notebook: mergeNotebook(local.notebook, cloud.notebook),
+    prayerStats: mergePrayerStats(local.prayerStats, cloud.prayerStats),
+    revelations: unionById(local.revelations, cloud.revelations),
   };
 }

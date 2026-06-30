@@ -8,11 +8,10 @@ import { AccountAvatar } from '@/components/auth/AccountAvatar';
 const LINKS = [
   { href: '/', label: 'Journey' },
   { href: '/stillness', label: 'Stillness' },
+  { href: '/prayer', label: 'Prayer' },
   { href: '/read', label: 'Read' },
   { href: '/search', label: 'Search' },
   { href: '/bookmarks', label: 'Saved' },
-  { href: '/people', label: 'People' },
-  { href: '/glossary', label: 'Glossary' },
   { href: '/about', label: 'About' },
   ...(AUTH_ENABLED ? [{ href: '/account', label: 'Account' }] : []),
 ];

@@ -23,6 +23,8 @@ const HOW_TO = [
 
 const LINKS = [
   { href: '/stillness', icon: 'feather', title: 'Stillness', body: 'Timed meditation & guided quiet time.' },
+  { href: '/prayer', icon: 'flame', title: 'Prayer', body: 'Timed prayer, a rhythm to keep & revelations.' },
+  { href: '/notes', icon: 'quote', title: 'Notes', body: 'Your own free-form notes & study.' },
   { href: '/settings', icon: 'settings', title: 'Settings', body: 'Theme (incl. low-light) & soundscape.' },
   ...(AUTH_ENABLED
     ? [

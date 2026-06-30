@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { acts } from '@/content';
 import { toMeta } from '@/lib/actMeta';
 import { PageHeader } from '@/components/PageHeader';
@@ -8,7 +9,6 @@ import { AccountClient } from '@/components/account/AccountClient';
 import { ProfileStats } from '@/components/account/ProfileStats';
 import { GamificationPanel } from '@/components/account/GamificationPanel';
 import { LeaderboardClient } from '@/components/leaderboard/LeaderboardClient';
-import { PrayerJournal } from '@/components/prayer/PrayerJournal';
 import { Icon } from '@/components/Icon';
 import { AUTH_ENABLED } from '@/lib/authEnabled';
 
@@ -57,9 +57,22 @@ export default function AccountPage() {
           </div>
         )}
 
-        <SectionPanel id="prayer" eyebrow="Lift them up" title="Prayer journal" icon="sparkles">
-          <PrayerJournal />
-        </SectionPanel>
+        <Link
+          href="/prayer"
+          className="flex items-center gap-4 rounded-card glass p-5 transition-colors hover:bg-white/[0.08]"
+        >
+          <span
+            className="flex h-11 w-11 flex-none items-center justify-center rounded-full"
+            style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255,255,255,0.92), rgba(253,230,138,0.4) 60%, transparent)' }}
+          >
+            <Icon name="flame" size={19} aria-hidden className="text-abyss" />
+          </span>
+          <div className="flex-1">
+            <p className="font-display text-lg text-ink">Prayer room</p>
+            <p className="text-sm text-ink-muted">Timed prayer, your rhythm, requests &amp; revelations.</p>
+          </div>
+          <Icon name="chevron-right" size={18} aria-hidden className="text-ink-faint" />
+        </Link>
       </div>
     </main>
   );
