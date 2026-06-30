@@ -80,6 +80,10 @@ export const AMBIENT_TRACKS: AmbientTrack[] = [
 
 export const DEFAULT_TRACK_ID = 'rest-in-jesus';
 export const SOUND_TRACK_KEY = 'selah:sound-track:v1';
+export const SOUND_VOLUME_KEY = 'selah:sound-volume:v1';
+export const DEFAULT_VOLUME = 0.7; // 0..1 multiplier over each track's tuned mix level
+
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
 export const AMBIENT_ATTRIBUTION =
   'Ambient music: a generative worship pad plus a set of prophetic worship & soaking-prayer ' +
@@ -93,6 +97,8 @@ export interface AmbientController {
   suspend: () => void;
   resume: () => void;
   dispose: () => void;
+  /** Set the user volume multiplier (0..1). Safe to call before or after start. */
+  setVolume: (v: number) => void;
 }
 
 // ── Chord progression (D major, lush + restful): D – A – Bm7 – Gmaj9 ──────────
@@ -125,6 +131,8 @@ function makeReverbImpulse(ctx: AudioContext, seconds = 4.5, decay = 3.2): Audio
 class GenerativePad implements AmbientController {
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
+  private userGain: GainNode | null = null;
+  private userVolume = DEFAULT_VOLUME;
   private voices: { oscA: OscillatorNode; oscB: OscillatorNode; filter: BiquadFilterNode }[] = [];
   private sub: OscillatorNode | null = null;
   private lfos: OscillatorNode[] = [];
@@ -168,7 +176,12 @@ class GenerativePad implements AmbientController {
     const bus = ctx.createGain();
     bus.connect(dry).connect(master);
     bus.connect(convolver).connect(wet).connect(master);
-    master.connect(ctx.destination);
+
+    // user volume stage between the mix and the speakers
+    const userGain = ctx.createGain();
+    userGain.gain.value = this.userVolume;
+    this.userGain = userGain;
+    master.connect(userGain).connect(ctx.destination);
 
     // a slow filter-cutoff LFO for gently shifting brightness
     const filterLfo = ctx.createOscillator();
@@ -247,6 +260,12 @@ class GenerativePad implements AmbientController {
   resume() {
     this.ctx?.resume();
   }
+  setVolume(v: number) {
+    this.userVolume = clamp01(v);
+    if (this.userGain && this.ctx) {
+      this.userGain.gain.setTargetAtTime(this.userVolume, this.ctx.currentTime, 0.1);
+    }
+  }
 
   stop() {
     const ctx = this.ctx;
@@ -283,13 +302,17 @@ class GenerativePad implements AmbientController {
     this.ctx?.close().catch(() => {});
     this.ctx = null;
     this.master = null;
+    this.userGain = null;
     this.started = false;
   }
 }
 
+const FILE_BASE = TARGET_VOLUME * 2.2; // tuned background level at full user volume
+
 class FilePad implements AmbientController {
   private el: HTMLAudioElement | null = null;
   private fade: ReturnType<typeof setInterval> | null = null;
+  private userVolume = DEFAULT_VOLUME;
 
   constructor(private src: string) {}
 
@@ -319,13 +342,17 @@ class FilePad implements AmbientController {
       this.el = el;
     }
     await this.el.play();
-    this.rampVolume(TARGET_VOLUME * 2.2, 2500); // ~0.35 — gentle background level
+    this.rampVolume(FILE_BASE * this.userVolume, 2500); // gentle background level
   }
   suspend() {
     this.el?.pause();
   }
   resume() {
     this.el?.play().catch(() => {});
+  }
+  setVolume(v: number) {
+    this.userVolume = clamp01(v);
+    if (this.el) this.rampVolume(FILE_BASE * this.userVolume, 250);
   }
   stop() {
     this.rampVolume(0, 1500, () => this.dispose());

@@ -5,6 +5,8 @@ import {
   createAmbient,
   DEFAULT_TRACK_ID,
   SOUND_TRACK_KEY,
+  SOUND_VOLUME_KEY,
+  DEFAULT_VOLUME,
   type AmbientController,
 } from '@/lib/ambientAudio';
 import { readJSON, writeJSON, STORAGE_KEYS } from '@/lib/storage';
@@ -22,12 +24,14 @@ export function AmbientPlayer() {
   const ctrlRef = useRef<AmbientController | null>(null);
   const startedRef = useRef(false);
   const trackRef = useRef<string>(DEFAULT_TRACK_ID);
+  const volumeRef = useRef<number>(DEFAULT_VOLUME);
 
   const enable = useCallback(async () => {
     if (startedRef.current) return;
     try {
       ctrlRef.current = createAmbient(trackRef.current);
       await ctrlRef.current.start();
+      ctrlRef.current.setVolume(volumeRef.current);
       startedRef.current = true;
     } catch {
       /* audio blocked — leave off */
@@ -40,17 +44,23 @@ export function AmbientPlayer() {
     startedRef.current = false;
   }, []);
 
-  // Track which soundscape is selected; switch live if it changes while playing.
+  // Track which soundscape + volume are selected; apply live while playing.
   useEffect(() => {
     trackRef.current = readJSON<string>(SOUND_TRACK_KEY, DEFAULT_TRACK_ID);
+    volumeRef.current = readJSON<number>(SOUND_VOLUME_KEY, DEFAULT_VOLUME);
     const onStorage = (e: Event) => {
-      if ((e as CustomEvent).detail?.key !== SOUND_TRACK_KEY) return;
-      const next = readJSON<string>(SOUND_TRACK_KEY, DEFAULT_TRACK_ID);
-      if (next === trackRef.current) return;
-      trackRef.current = next;
-      if (startedRef.current) {
-        disable();
-        void enable();
+      const key = (e as CustomEvent).detail?.key;
+      if (key === SOUND_TRACK_KEY) {
+        const next = readJSON<string>(SOUND_TRACK_KEY, DEFAULT_TRACK_ID);
+        if (next === trackRef.current) return;
+        trackRef.current = next;
+        if (startedRef.current) {
+          disable();
+          void enable();
+        }
+      } else if (key === SOUND_VOLUME_KEY) {
+        volumeRef.current = readJSON<number>(SOUND_VOLUME_KEY, DEFAULT_VOLUME);
+        ctrlRef.current?.setVolume(volumeRef.current);
       }
     };
     window.addEventListener('selah:storage', onStorage);
