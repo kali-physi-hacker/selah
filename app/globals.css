@@ -170,6 +170,32 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* ── Themes (data-theme on <html>) ───────────────────────────────────── */
+.theme-veil {
+  background: transparent;
+  transition: background-color 0.7s ease;
+}
+/* Midnight — deepen and dim the bright background for low-light rooms */
+html[data-theme='midnight'] body {
+  background-color: #010c0c;
+  background-image:
+    radial-gradient(78% 52% at 50% -10%, rgba(253, 224, 138, 0.05) 0%, rgba(253, 224, 138, 0) 60%),
+    radial-gradient(120% 80% at 50% 0%, #073e3a 0%, #021a19 48%, #010c0c 100%);
+}
+html[data-theme='midnight'] .theme-veil {
+  background: rgba(1, 10, 13, 0.5);
+}
+/* Candle — warm, low-blue glow for night and rest */
+html[data-theme='candle'] body {
+  background-color: #0a0703;
+  background-image:
+    radial-gradient(78% 52% at 50% -10%, rgba(253, 200, 120, 0.1) 0%, rgba(253, 200, 120, 0) 62%),
+    radial-gradient(120% 80% at 50% 0%, #3a2410 0%, #15100a 50%, #0a0703 100%);
+}
+html[data-theme='candle'] .theme-veil {
+  background: rgba(56, 30, 6, 0.52);
+}
+
 /* Respect the user's wish for calm — honor reduced motion everywhere */
 @media (prefers-reduced-motion: reduce) {
   *,
