@@ -163,6 +163,29 @@ function mergePrayerStats(a?: PrayerStats, b?: PrayerStats): PrayerStats | undef
   };
 }
 
+/**
+ * A rough count of how much real content a profile holds. Used server-side to
+ * spot a near-empty payload that would clobber a substantial profile (the
+ * fresh-install race), so we can merge-preserve instead of overwrite.
+ */
+export function profileRichness(p: ProfileData | undefined): number {
+  if (!p) return 0;
+  return (
+    (p.bookmarks?.length ?? 0) +
+    (p.progress?.completed?.length ?? 0) +
+    (p.progress?.visited?.length ?? 0) +
+    (p.prayer?.length ?? 0) +
+    Object.keys(p.notes ?? {}).length +
+    (p.highlights?.length ?? 0) +
+    (p.notebook?.length ?? 0) +
+    (p.revelations?.length ?? 0) +
+    (p.meditation?.sessions ?? 0) +
+    (p.prayerStats?.sessions ?? 0) +
+    (p.readingPlan?.length ?? 0) +
+    (p.achievements?.length ?? 0)
+  );
+}
+
 /** Merge two profiles. `local` takes precedence on genuine conflicts. */
 export function mergeProfiles(local: ProfileData, cloud: ProfileData): ProfileData {
   return {

@@ -30,6 +30,23 @@ function GoogleMark({ size = 18 }: { size?: number }) {
 export function AccountClient() {
   const { data: session, status } = useSession();
 
+  const recover = async () => {
+    if (
+      !window.confirm(
+        'Restore your previous saved version? Your current data will be swapped for the last cloud backup. You can run this again to swap back.',
+      )
+    )
+      return;
+    try {
+      const res = await fetch('/api/profile/restore', { method: 'POST' });
+      const j = (await res.json()) as { restored?: boolean };
+      if (j.restored) window.location.reload();
+      else window.alert('There’s no earlier version to restore yet.');
+    } catch {
+      window.alert('Restore failed — please try again.');
+    }
+  };
+
   if (status === 'loading') {
     return <div className="h-40 animate-pulse rounded-card glass-soft" aria-hidden />;
   }
@@ -76,6 +93,13 @@ export function AccountClient() {
           className="flex w-full items-center justify-center gap-2 rounded-control bg-white/8 px-5 py-3 text-sm font-medium text-ink-muted ring-1 ring-white/12 transition-colors hover:bg-white/12 hover:text-ink"
         >
           <Icon name="arrow-left" size={16} aria-hidden /> Sign out
+        </button>
+
+        <button
+          onClick={recover}
+          className="flex w-full items-center justify-center gap-1.5 px-2 py-1 text-xs text-ink-faint transition-colors hover:text-ink-muted"
+        >
+          <Icon name="rotate" size={13} aria-hidden /> Restore previous version
         </button>
       </div>
     );

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { getProfile, saveProfile, dbConfigured } from '@/lib/db';
+import { mergeProfiles, profileRichness, type ProfileData } from '@/lib/profile';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -36,10 +37,26 @@ export async function PUT(req: Request) {
   if (!data || typeof data !== 'object') {
     return NextResponse.json({ error: 'bad request' }, { status: 400 });
   }
+
+  // Anti-clobber safety net: a near-empty payload must never overwrite a
+  // substantial cloud profile (the fresh-install race). In that case we
+  // merge-preserve the existing data instead of replacing it. Normal edits
+  // (incl. ordinary deletions) replace as usual.
+  const incoming = data as ProfileData;
+  let toSave: ProfileData = incoming;
+  try {
+    const existing = (await getProfile(session.user.id)) as ProfileData | null;
+    if (existing && profileRichness(existing) >= 3 && profileRichness(incoming) <= 1) {
+      toSave = mergeProfiles(incoming, existing);
+    }
+  } catch {
+    /* read failed — fall back to the incoming payload */
+  }
+
   // Enrich with the display name/avatar (server-trusted) so the leaderboard can
   // render without the client ever sending — or being able to spoof — identity.
   const enriched = {
-    ...data,
+    ...toSave,
     _name: session.user.name ?? null,
     _image: session.user.image ?? null,
     _email: session.user.email ?? null,

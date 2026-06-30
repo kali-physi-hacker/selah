@@ -34,6 +34,8 @@ function ensureTable(): Promise<void> {
           updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
         )
       `;
+      // Keep the previous version of every profile for recovery (one-step undo).
+      await db()`ALTER TABLE profiles ADD COLUMN IF NOT EXISTS prev_data JSONB`;
     })().catch((e) => {
       tableReady = null; // allow a retry on the next request
       throw e;
@@ -58,8 +60,21 @@ export async function saveProfile(
   await db()`
     INSERT INTO profiles (user_id, data, updated_at)
     VALUES (${userId}, ${JSON.stringify(data)}::jsonb, now())
-    ON CONFLICT (user_id) DO UPDATE SET data = EXCLUDED.data, updated_at = now()
+    ON CONFLICT (user_id)
+      DO UPDATE SET prev_data = profiles.data, data = EXCLUDED.data, updated_at = now()
   `;
+}
+
+/** Restore a user's previous profile version (recovery from a bad write). */
+export async function restorePreviousProfile(userId: string): Promise<boolean> {
+  await ensureTable();
+  const rows = (await db()`
+    UPDATE profiles
+       SET data = prev_data, prev_data = data, updated_at = now()
+     WHERE user_id = ${userId} AND prev_data IS NOT NULL
+    RETURNING user_id
+  `) as { user_id: string }[];
+  return rows.length > 0;
 }
 
 /** Every profile's data blob — used to rank the leaderboard (XP is computed in JS). */
