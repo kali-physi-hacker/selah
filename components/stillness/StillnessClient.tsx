@@ -5,16 +5,17 @@ import { DailyVerse } from '@/components/DailyVerse';
 import { MeditationSession } from './MeditationSession';
 import { QuietTime } from './QuietTime';
 import { useMeditation } from '@/lib/useMeditation';
+import type { DailyVerse as DV } from '@/lib/dailyVerse';
 
 type Tab = 'still' | 'quiet';
 
-export function StillnessClient() {
+export function StillnessClient({ pool }: { pool: DV[] }) {
   const [tab, setTab] = useState<Tab>('still');
   const { stats, hydrated } = useMeditation();
 
   return (
     <div className="space-y-5 px-4 sm:px-6">
-      <DailyVerse />
+      <DailyVerse pool={pool} />
 
       {hydrated && stats.totalMinutes > 0 && (
         <p className="text-center text-xs text-ink-faint">
@@ -43,7 +44,7 @@ export function StillnessClient() {
       {tab === 'still' ? (
         <MeditationSession accent="#67E8F9" />
       ) : (
-        <QuietTime accent="#FDE68A" />
+        <QuietTime accent="#FDE68A" pool={pool} />
       )}
     </div>
   );

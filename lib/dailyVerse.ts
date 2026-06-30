@@ -1,4 +1,3 @@
-import { acts } from '@/content';
 import type { VerseRef } from '@/content/types';
 
 export interface DailyVerse {
@@ -8,8 +7,22 @@ export interface DailyVerse {
   accent: string;
 }
 
-/** Every quotable verse across the journey (featured + memory), deduped. */
-const ALL: DailyVerse[] = (() => {
+// The minimal shape we need from each act — keeps this module free of the full
+// content graph so it can be used in client components without bundling it.
+interface ActLike {
+  slug: string;
+  title: string;
+  accent: string;
+  featuredVerse: VerseRef;
+  memoryVerses: VerseRef[];
+}
+
+/**
+ * Build the pool of quotable verses (featured + memory, deduped). Call this on
+ * the SERVER (where `acts` is already imported) and pass the result to client
+ * components as a prop — never import `@/content` into a client component.
+ */
+export function buildDailyVersePool(acts: ActLike[]): DailyVerse[] {
   const seen = new Set<string>();
   const out: DailyVerse[] = [];
   for (const a of acts) {
@@ -22,14 +35,11 @@ const ALL: DailyVerse[] = (() => {
     }
   }
   return out;
-})();
-
-export const totalDailyVerses = ALL.length;
+}
 
 /** A stable verse for a given calendar day (no randomness — same all day). */
-export function verseForDate(d: Date): DailyVerse {
-  const dayNumber = Math.floor(
-    Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86_400_000,
-  );
-  return ALL[((dayNumber % ALL.length) + ALL.length) % ALL.length];
+export function verseForDate(d: Date, pool: DailyVerse[]): DailyVerse | null {
+  if (pool.length === 0) return null;
+  const dayNumber = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86_400_000);
+  return pool[((dayNumber % pool.length) + pool.length) % pool.length];
 }

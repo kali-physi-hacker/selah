@@ -7,12 +7,12 @@ import { Icon } from '@/components/Icon';
 import { hexToRgba } from '@/lib/color';
 
 /** "Today's light" — a calm, stable verse for the day, linking into its act. */
-export function DailyVerse() {
+export function DailyVerse({ pool }: { pool: DV[] }) {
   const [dv, setDv] = useState<DV | null>(null);
 
   useEffect(() => {
-    setDv(verseForDate(new Date()));
-  }, []);
+    setDv(verseForDate(new Date(), pool));
+  }, [pool]);
 
   if (!dv) return <div className="h-[7.5rem] animate-pulse rounded-card glass-soft" aria-hidden />;
 

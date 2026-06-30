@@ -9,10 +9,12 @@ import { PageBackdrop } from '@/components/PageBackdrop';
 import { homeScenery } from '@/lib/imagery';
 import { Reveal } from '@/components/Reveal';
 import { DailyVerse } from '@/components/DailyVerse';
+import { buildDailyVersePool } from '@/lib/dailyVerse';
 import { Icon } from '@/components/Icon';
 
 export default function HomePage() {
   const meta = acts.map(toMeta);
+  const versePool = buildDailyVersePool(acts);
 
   return (
     <main className="px-4 pb-8 sm:px-6">
@@ -24,7 +26,7 @@ export default function HomePage() {
       </Reveal>
 
       <Reveal className="mt-4">
-        <DailyVerse />
+        <DailyVerse pool={versePool} />
       </Reveal>
 
       <Reveal className="mt-4">
@@ -59,7 +61,7 @@ export default function HomePage() {
       <p className="mt-10 text-center text-xs leading-relaxed text-ink-faint">
         Scripture quoted from the World English Bible (public domain).
         <br />
-        Every word ships with the app — no account, no tracking, no noise.
+        Every word ships with the app — no account needed, just you and the Word.
       </p>
     </main>
   );

@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { BreathOrb } from '@/components/three/BreathOrb';
 import { playChime, primeChime } from '@/lib/chime';
 import { useMeditation } from '@/lib/useMeditation';
-import { verseForDate } from '@/lib/dailyVerse';
+import { track } from '@/lib/analytics';
+import { verseForDate, type DailyVerse as DV } from '@/lib/dailyVerse';
 import { Icon } from '@/components/Icon';
 import { hexToRgba } from '@/lib/color';
 
@@ -21,15 +22,15 @@ const TOTAL = PHASES.reduce((a, p) => a + p.minutes, 0);
 type Phase = 'idle' | 'running' | 'paused' | 'done';
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
-export function QuietTime({ accent = '#67E8F9' }: { accent?: string }) {
+export function QuietTime({ accent = '#67E8F9', pool }: { accent?: string; pool: DV[] }) {
   const [phase, setPhase] = useState<Phase>('idle');
   const [index, setIndex] = useState(0);
   const [remaining, setRemaining] = useState(0);
   const { addMinutes } = useMeditation();
   const tick = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const [today, setToday] = useState<ReturnType<typeof verseForDate> | null>(null);
+  const [today, setToday] = useState<DV | null>(null);
 
-  useEffect(() => setToday(verseForDate(new Date())), []);
+  useEffect(() => setToday(verseForDate(new Date(), pool)), [pool]);
 
   const begin = () => {
     primeChime();
@@ -55,6 +56,7 @@ export function QuietTime({ accent = '#67E8F9' }: { accent?: string }) {
     } else {
       playChime(396);
       addMinutes(TOTAL);
+      track('quiet_time_complete', { minutes: TOTAL });
       setPhase('done');
     }
   }, [phase, remaining, index, addMinutes]);
