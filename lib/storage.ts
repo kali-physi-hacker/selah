@@ -52,4 +52,6 @@ export const STORAGE_KEYS = {
   installDismissed: 'selah:install-dismissed:v1',
   meditation: 'selah:meditation:v1',
   prayer: 'selah:prayer:v1',
+  achievements: 'selah:achievements:v1',
+  leaderboardOptOut: 'selah:leaderboard-optout:v1',
 } as const;

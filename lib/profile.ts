@@ -17,6 +17,11 @@ export interface ProfileData {
   readingPlan?: number[];
   prayer?: Prayer[];
   meditation?: MeditationStats;
+  achievements?: string[];
+  // server-enriched (for the leaderboard) — never written from the client
+  _name?: string;
+  _image?: string;
+  leaderboardOptOut?: boolean;
 }
 
 export const SYNCED_KEYS: string[] = [
@@ -26,6 +31,8 @@ export const SYNCED_KEYS: string[] = [
   STORAGE_KEYS.readingPlan,
   STORAGE_KEYS.prayer,
   STORAGE_KEYS.meditation,
+  STORAGE_KEYS.achievements,
+  STORAGE_KEYS.leaderboardOptOut,
 ];
 
 export function readLocalProfile(): ProfileData {
@@ -36,6 +43,8 @@ export function readLocalProfile(): ProfileData {
     readingPlan: readJSON<number[] | undefined>(STORAGE_KEYS.readingPlan, undefined),
     prayer: readJSON<Prayer[] | undefined>(STORAGE_KEYS.prayer, undefined),
     meditation: readJSON<MeditationStats | undefined>(STORAGE_KEYS.meditation, undefined),
+    achievements: readJSON<string[] | undefined>(STORAGE_KEYS.achievements, undefined),
+    leaderboardOptOut: readJSON<boolean | undefined>(STORAGE_KEYS.leaderboardOptOut, undefined),
   };
 }
 
@@ -46,6 +55,9 @@ export function writeLocalProfile(p: ProfileData): void {
   if (p.readingPlan) writeJSON(STORAGE_KEYS.readingPlan, p.readingPlan);
   if (p.prayer) writeJSON(STORAGE_KEYS.prayer, p.prayer);
   if (p.meditation) writeJSON(STORAGE_KEYS.meditation, p.meditation);
+  if (p.achievements) writeJSON(STORAGE_KEYS.achievements, p.achievements);
+  if (typeof p.leaderboardOptOut === 'boolean')
+    writeJSON(STORAGE_KEYS.leaderboardOptOut, p.leaderboardOptOut);
 }
 
 const union = <T>(a?: T[], b?: T[]): T[] => Array.from(new Set([...(a ?? []), ...(b ?? [])]));
@@ -111,5 +123,7 @@ export function mergeProfiles(local: ProfileData, cloud: ProfileData): ProfileDa
     readingPlan: union(local.readingPlan, cloud.readingPlan).sort((x, y) => x - y),
     prayer: mergePrayers(local.prayer, cloud.prayer),
     meditation: mergeMeditation(local.meditation, cloud.meditation),
+    achievements: union(local.achievements, cloud.achievements),
+    leaderboardOptOut: local.leaderboardOptOut ?? cloud.leaderboardOptOut,
   };
 }

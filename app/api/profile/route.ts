@@ -36,8 +36,15 @@ export async function PUT(req: Request) {
   if (!data || typeof data !== 'object') {
     return NextResponse.json({ error: 'bad request' }, { status: 400 });
   }
+  // Enrich with the display name/avatar (server-trusted) so the leaderboard can
+  // render without the client ever sending — or being able to spoof — identity.
+  const enriched = {
+    ...data,
+    _name: session.user.name ?? null,
+    _image: session.user.image ?? null,
+  };
   try {
-    await saveProfile(session.user.id, data);
+    await saveProfile(session.user.id, enriched);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: 'write failed' }, { status: 500 });

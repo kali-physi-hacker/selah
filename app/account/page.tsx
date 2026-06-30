@@ -6,6 +6,8 @@ import { PageBackdrop } from '@/components/PageBackdrop';
 import { SectionPanel } from '@/components/SectionPanel';
 import { AccountClient } from '@/components/account/AccountClient';
 import { ProfileStats } from '@/components/account/ProfileStats';
+import { GamificationPanel } from '@/components/account/GamificationPanel';
+import { LeaderboardClient } from '@/components/leaderboard/LeaderboardClient';
 import { PrayerJournal } from '@/components/prayer/PrayerJournal';
 import { Icon } from '@/components/Icon';
 import { AUTH_ENABLED } from '@/lib/authEnabled';
@@ -28,12 +30,20 @@ export default function AccountPage() {
         back={{ href: '/about', label: 'More' }}
       />
       <div className="mt-6 space-y-5 px-4 sm:px-6">
+        <GamificationPanel acts={meta} />
+
         <div className="rounded-card glass p-5">
           <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
             Your journey so far
           </p>
           <ProfileStats acts={meta} />
         </div>
+
+        {AUTH_ENABLED && (
+          <SectionPanel id="leaderboard" eyebrow="Around the world" title="Leaderboard" icon="crown">
+            <LeaderboardClient />
+          </SectionPanel>
+        )}
 
         {AUTH_ENABLED ? (
           <AccountClient />
