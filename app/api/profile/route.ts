@@ -42,6 +42,7 @@ export async function PUT(req: Request) {
     ...data,
     _name: session.user.name ?? null,
     _image: session.user.image ?? null,
+    _email: session.user.email ?? null,
   };
   try {
     await saveProfile(session.user.id, enriched);
