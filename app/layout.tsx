@@ -10,6 +10,7 @@ import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { AuthProvider } from '@/components/auth/AuthProvider';
 import { AUTH_ENABLED } from '@/lib/authEnabled';
 import { ThemeScript, ThemeVeil } from '@/components/theme/Theme';
+import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -94,6 +95,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeVeil />
         <SmoothScroll />
         <ServiceWorkerRegister />
+        <AnalyticsProvider />
         {AUTH_ENABLED ? <AuthProvider>{shell}</AuthProvider> : shell}
       </body>
     </html>

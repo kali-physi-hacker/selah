@@ -2,6 +2,7 @@
 
 import { useTheme } from '@/lib/useTheme';
 import { THEMES, THEME_META } from '@/lib/theme';
+import { track } from '@/lib/analytics';
 import { Icon } from '@/components/Icon';
 
 export function ThemePicker() {
@@ -15,7 +16,10 @@ export function ThemePicker() {
         return (
           <button
             key={id}
-            onClick={() => setTheme(id)}
+            onClick={() => {
+              setTheme(id);
+              track('theme_change', { theme: id });
+            }}
             aria-pressed={active}
             className={`rounded-card p-4 text-left transition-colors ${
               active ? 'glass-strong ring-1 ring-aqua/50' : 'glass-soft hover:bg-white/10'

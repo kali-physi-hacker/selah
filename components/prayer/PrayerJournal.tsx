@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { usePrayer } from '@/lib/usePrayer';
+import { track } from '@/lib/analytics';
 import { Icon } from '@/components/Icon';
 
 function timeAgo(iso: string): string {
@@ -17,7 +18,9 @@ export function PrayerJournal() {
   const [text, setText] = useState('');
 
   const submit = () => {
+    if (!text.trim()) return;
     add(text);
+    track('prayer_add'); // event only — never the prayer's content
     setText('');
   };
 

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BreathOrb } from '@/components/three/BreathOrb';
 import { playChime, primeChime } from '@/lib/chime';
 import { useMeditation } from '@/lib/useMeditation';
+import { track } from '@/lib/analytics';
 import { Icon } from '@/components/Icon';
 import { hexToRgba } from '@/lib/color';
 
@@ -45,6 +46,7 @@ export function MeditationSession({ accent = '#67E8F9' }: { accent?: string }) {
     if (phase === 'running' && remaining === 0) {
       playChime(396);
       addMinutes(minutes);
+      track('meditation_complete', { minutes });
       setPhase('done');
     }
   }, [phase, remaining, minutes, addMinutes]);
