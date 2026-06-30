@@ -17,13 +17,24 @@ import { Icon } from '@/components/Icon';
 import { hexToRgba } from '@/lib/color';
 
 const ACCENT = '#FDE68A';
-const DURATIONS = [0, 5, 10, 15, 30]; // 0 = open / count-up
-const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+// Multiples of 3 & 7 for the shorter watches, then long hours of prayer.
+const DURATIONS = [3, 7, 12, 21, 30, 60, 120, 180];
+const durLabel = (m: number) => (m % 60 === 0 && m >= 60 ? `${m / 60}h` : `${m} min`);
+const fmt = (s: number) => {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  return h > 0
+    ? `${h}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+    : `${m}:${String(sec).padStart(2, '0')}`;
+};
 type Phase = 'idle' | 'running' | 'paused' | 'done';
 
 export function PrayerSession() {
   const [phase, setPhase] = useState<Phase>('idle');
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(7);
+  const [isCustom, setIsCustom] = useState(false);
+  const [customMin, setCustomMin] = useState(45);
   const [elapsed, setElapsed] = useState(0);
   const [revelation, setRevelation] = useState('');
   const [revealOpen, setRevealOpen] = useState(false);
@@ -101,27 +112,67 @@ export function PrayerSession() {
     return (
       <div className="rounded-card glass p-5">
         <p className="text-sm leading-relaxed text-ink-muted">
-          Enter prayer with a gentle instrumental — pray open-ended, or set a length. Capture any
+          Enter prayer with a gentle instrumental — from a short watch to long hours. Capture any
           revelation or vision as it comes.
         </p>
         <p className="mb-3 mt-4 text-xs uppercase tracking-[0.18em] text-ink-faint">How long?</p>
         <div className="flex flex-wrap gap-2">
-          {DURATIONS.map((m) => (
-            <button
-              key={m}
-              onClick={() => setDuration(m)}
-              aria-pressed={duration === m}
-              className="rounded-pill px-4 py-2 text-sm font-medium transition-colors"
-              style={
-                duration === m
-                  ? { background: hexToRgba(ACCENT, 0.28), color: '#F0FDFA', boxShadow: `inset 0 0 0 1px ${hexToRgba(ACCENT, 0.5)}` }
-                  : { background: 'rgba(255,255,255,0.06)', color: 'rgba(240,253,250,0.7)' }
-              }
-            >
-              {m === 0 ? 'Open' : `${m} min`}
-            </button>
-          ))}
+          {DURATIONS.map((m) => {
+            const active = !isCustom && duration === m;
+            return (
+              <button
+                key={m}
+                onClick={() => {
+                  setDuration(m);
+                  setIsCustom(false);
+                }}
+                aria-pressed={active}
+                className="rounded-pill px-4 py-2 text-sm font-medium transition-colors"
+                style={
+                  active
+                    ? { background: hexToRgba(ACCENT, 0.28), color: '#F0FDFA', boxShadow: `inset 0 0 0 1px ${hexToRgba(ACCENT, 0.5)}` }
+                    : { background: 'rgba(255,255,255,0.06)', color: 'rgba(240,253,250,0.7)' }
+                }
+              >
+                {durLabel(m)}
+              </button>
+            );
+          })}
+          <button
+            onClick={() => {
+              setIsCustom(true);
+              setDuration(customMin);
+            }}
+            aria-pressed={isCustom}
+            className="rounded-pill px-4 py-2 text-sm font-medium transition-colors"
+            style={
+              isCustom
+                ? { background: hexToRgba(ACCENT, 0.28), color: '#F0FDFA', boxShadow: `inset 0 0 0 1px ${hexToRgba(ACCENT, 0.5)}` }
+                : { background: 'rgba(255,255,255,0.06)', color: 'rgba(240,253,250,0.7)' }
+            }
+          >
+            Custom
+          </button>
         </div>
+
+        {isCustom && (
+          <div className="mt-3 flex items-center gap-2">
+            <input
+              type="number"
+              min={1}
+              max={600}
+              value={customMin}
+              onChange={(e) => {
+                const v = Math.max(1, Math.min(600, Number(e.target.value) || 1));
+                setCustomMin(v);
+                setDuration(v);
+              }}
+              aria-label="Custom minutes"
+              className="w-24 rounded-control border border-white/15 bg-white/[0.06] px-3 py-2 text-sm text-ink focus:border-white/30 focus:outline-none"
+            />
+            <span className="text-sm text-ink-muted">minutes</span>
+          </div>
+        )}
         <label className="mt-4 flex items-center gap-2.5 text-sm text-ink-muted">
           <input type="checkbox" checked={sound} onChange={toggleSound} className="h-4 w-4 accent-light-warm" />
           Play instrumental during prayer
@@ -131,7 +182,7 @@ export function PrayerSession() {
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-card px-5 py-4 font-medium text-ink transition-transform active:scale-[0.99]"
           style={{ background: `linear-gradient(135deg, ${hexToRgba(ACCENT, 0.34)}, rgba(255,255,255,0.05))`, border: `1px solid ${hexToRgba(ACCENT, 0.45)}` }}
         >
-          <Icon name="play" size={18} aria-hidden /> Begin prayer{duration > 0 ? ` · ${duration} min` : ''}
+          <Icon name="play" size={18} aria-hidden /> Begin prayer · {durLabel(duration)}
         </button>
       </div>
     );
