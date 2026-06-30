@@ -19,25 +19,26 @@ const config: Config = {
         abyss: '#042F2E',
         deep: '#0E5C57',
         teal: '#14B8A6',
-        aqua: '#67E8F9',
-        // Divine light accents
+        // Mode-aware: white tints + accents flip between light/dark via CSS vars
+        // (channels, so Tailwind's `/opacity` modifiers keep working).
+        white: 'rgb(var(--surface) / <alpha-value>)',
+        pure: '#FFFFFF', // genuinely-white surfaces (e.g. the Google button)
+        aqua: 'rgb(var(--aqua) / <alpha-value>)',
         light: {
           DEFAULT: '#FFFFFF',
-          warm: '#FDE68A',
-          gold: '#FCD34D',
+          warm: 'rgb(var(--warm) / <alpha-value>)',
+          gold: 'rgb(var(--gold) / <alpha-value>)',
         },
-        // Text on dark
         ink: {
-          DEFAULT: '#F0FDFA',
-          muted: 'rgba(240, 253, 250, 0.72)',
-          faint: 'rgba(240, 253, 250, 0.5)',
+          DEFAULT: 'rgb(var(--ink) / <alpha-value>)',
+          muted: 'rgb(var(--ink) / 0.72)',
+          faint: 'rgb(var(--ink) / 0.5)',
         },
-        // Glass surfaces (use with backdrop-blur)
         glass: {
-          DEFAULT: 'rgba(255, 255, 255, 0.10)',
-          soft: 'rgba(255, 255, 255, 0.06)',
-          strong: 'rgba(255, 255, 255, 0.14)',
-          border: 'rgba(255, 255, 255, 0.18)',
+          DEFAULT: 'var(--glass-bg)',
+          soft: 'var(--glass-bg-soft)',
+          strong: 'var(--glass-bg-strong)',
+          border: 'var(--glass-bd)',
         },
       },
       fontFamily: {

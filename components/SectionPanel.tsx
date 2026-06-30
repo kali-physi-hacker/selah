@@ -37,7 +37,7 @@ export function SectionPanel({
             style={{
               background: hexToRgba(accent, 0.16),
               border: `1px solid ${hexToRgba(accent, 0.32)}`,
-              color: '#F0FDFA',
+              color: 'rgb(var(--ink))',
             }}
           >
             <Icon name={icon} size={18} aria-hidden />

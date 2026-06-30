@@ -41,11 +41,11 @@ export function OrbitRing({
       {/* faint concentric rings */}
       <div
         className="absolute inset-[8%] rounded-full"
-        style={{ border: `1px solid ${hexToRgba('#F0FDFA', 0.14)}` }}
+        style={{ border: `1px solid ${'rgb(var(--ink) / 0.14)'}` }}
       />
       <div
         className="absolute inset-[20%] rounded-full"
-        style={{ border: `1px solid ${hexToRgba('#F0FDFA', 0.1)}` }}
+        style={{ border: `1px solid ${'rgb(var(--ink) / 0.1)'}` }}
       />
 
       {/* rotating ring of words */}
@@ -64,7 +64,7 @@ export function OrbitRing({
         {words.map((word, i) => (
           <text
             key={word}
-            fill={hexToRgba('#F0FDFA', 0.55)}
+            fill={'rgb(var(--ink) / 0.55)'}
             style={{
               fontSize: '7px',
               letterSpacing: '2.5px',

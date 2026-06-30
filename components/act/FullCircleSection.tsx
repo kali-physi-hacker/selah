@@ -13,7 +13,7 @@ export function FullCircleSection({ links }: { links: FullCircleLink[] }) {
           key={m.from}
           className="rounded-card p-4"
           style={{
-            background: `linear-gradient(160deg, ${hexToRgba(THREAD, 0.1)}, rgba(255,255,255,0.03))`,
+            background: `linear-gradient(160deg, ${hexToRgba(THREAD, 0.1)}, rgb(var(--surface) / 0.03))`,
             border: `1px solid ${hexToRgba(THREAD, 0.2)}`,
           }}
         >

@@ -58,8 +58,8 @@ export function ReadClient({ plan, acts }: { plan: ReadingDay[]; acts: ActMeta[]
             className="rounded-pill px-4 py-2 text-sm font-medium transition-colors"
             style={
               mode === m
-                ? { background: 'rgba(255,255,255,0.16)', color: '#F0FDFA' }
-                : { color: 'rgba(240,253,250,0.6)' }
+                ? { background: 'rgb(var(--surface) / 0.16)', color: 'rgb(var(--ink))' }
+                : { color: 'rgb(var(--ink) / 0.6)' }
             }
           >
             {m === 'path' ? 'Master in 30 days' : 'Free explore'}
@@ -168,7 +168,7 @@ function PathView({
                 aria-label={`Mark day ${d.day} ${done ? 'not done' : 'done'}`}
                 className="flex h-9 w-9 flex-none items-center justify-center rounded-full transition-colors"
                 style={{
-                  background: done ? hexToRgba(d.accent, 0.35) : 'rgba(255,255,255,0.06)',
+                  background: done ? hexToRgba(d.accent, 0.35) : 'rgb(var(--surface) / 0.06)',
                   border: `1px solid ${hexToRgba(d.accent, done ? 0.5 : 0.2)}`,
                 }}
               >

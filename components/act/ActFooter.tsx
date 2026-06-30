@@ -30,9 +30,9 @@ export function ActFooter({ slug, accent, prev, next }: Props) {
         style={{
           background: done
             ? hexToRgba(accent, 0.3)
-            : `linear-gradient(135deg, ${hexToRgba(accent, 0.22)}, rgba(255,255,255,0.04))`,
+            : `linear-gradient(135deg, ${hexToRgba(accent, 0.22)}, rgb(var(--surface) / 0.04))`,
           border: `1px solid ${hexToRgba(accent, done ? 0.55 : 0.3)}`,
-          color: '#F0FDFA',
+          color: 'rgb(var(--ink))',
         }}
       >
         <Icon name={done ? 'check-circle' : 'circle'} size={20} aria-hidden />

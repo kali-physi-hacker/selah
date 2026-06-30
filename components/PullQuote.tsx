@@ -23,7 +23,7 @@ export function PullQuote({
     <figure
       className={`relative rounded-card px-5 py-5 ${className}`}
       style={{
-        background: `linear-gradient(135deg, ${hexToRgba(accent, 0.14)}, rgba(255,255,255,0.03))`,
+        background: `linear-gradient(135deg, ${hexToRgba(accent, 0.14)}, rgb(var(--surface) / 0.03))`,
         borderLeft: `2px solid ${hexToRgba(accent, 0.65)}`,
       }}
     >

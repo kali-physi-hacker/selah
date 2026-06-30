@@ -85,10 +85,10 @@ export function SectionNav({ sections, accent }: { sections: NavSection[]; accen
                 isActive
                   ? {
                       background: hexToRgba(accent, 0.3),
-                      color: '#F0FDFA',
+                      color: 'rgb(var(--ink))',
                       boxShadow: `inset 0 0 0 1px ${hexToRgba(accent, 0.5)}`,
                     }
-                  : { color: 'rgba(240,253,250,0.6)' }
+                  : { color: 'rgb(var(--ink) / 0.6)' }
               }
             >
               {s.label}

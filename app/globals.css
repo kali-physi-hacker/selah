@@ -5,6 +5,59 @@
 :root {
   --accent: #14b8a6;
   --accent-soft: rgba(20, 184, 166, 0.25);
+
+  /* Mode-aware channels (R G B) — dark mode defaults */
+  --surface: 255 255 255; /* white tints over the dark ocean */
+  --ink: 240 253 250; /* text */
+  --aqua: 103 232 249;
+  --warm: 253 230 138;
+  --gold: 252 211 77;
+
+  /* Glass surfaces */
+  --glass-bg: rgb(var(--surface) / 0.08);
+  --glass-bg-soft: rgb(var(--surface) / 0.055);
+  --glass-bg-strong: rgb(var(--surface) / 0.13);
+  --glass-bd: rgb(var(--surface) / 0.16);
+  --glass-bd-soft: rgb(var(--surface) / 0.1);
+  --glass-bd-strong: rgb(var(--surface) / 0.2);
+  --glass-shadow: rgba(4, 47, 46, 0.5);
+  --glass-shadow-lg: rgba(4, 47, 46, 0.62);
+  --glass-inset: rgb(var(--surface) / 0.12);
+
+  /* Page background */
+  --body-bg: #021f1e;
+  --body-grad:
+    radial-gradient(80% 55% at 50% -10%, rgba(253, 224, 138, 0.12) 0%, rgba(253, 224, 138, 0) 60%),
+    radial-gradient(120% 80% at 50% 0%, #0e5c57 0%, #042f2e 48%, #021f1e 100%);
+  --scenery-veil: transparent;
+}
+
+/* ── Light mode ──────────────────────────────────────────────────────── */
+html[data-resolved-mode='light'] {
+  --surface: 13 60 57; /* soft dark-teal tints/borders over light */
+  --ink: 11 41 40;
+  --aqua: 14 116 144;
+  --warm: 180 83 9;
+  --gold: 161 98 7;
+
+  /* Glass CARDS stay light/frosted in light mode (white), while the white/X
+     tints + borders use the dark --surface so structure shows on light. */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg-soft: rgba(255, 255, 255, 0.5);
+  --glass-bg-strong: rgba(255, 255, 255, 0.86);
+  --glass-bd: rgba(13, 60, 57, 0.12);
+  --glass-bd-soft: rgba(13, 60, 57, 0.08);
+  --glass-bd-strong: rgba(13, 60, 57, 0.16);
+  --glass-shadow: rgba(14, 92, 87, 0.14);
+  --glass-shadow-lg: rgba(14, 92, 87, 0.18);
+  --glass-inset: rgba(255, 255, 255, 0.9);
+
+  --body-bg: #eef6f4;
+  --body-grad:
+    radial-gradient(80% 55% at 50% -10%, rgba(253, 224, 138, 0.28) 0%, rgba(253, 224, 138, 0) 60%),
+    radial-gradient(120% 80% at 50% 0%, #d8efeb 0%, #e7f4f1 48%, #eef6f4 100%);
+  /* wash the dark immersive scenery toward the light page */
+  --scenery-veil: rgba(238, 246, 244, 0.84);
 }
 
 @layer base {
@@ -16,15 +69,16 @@
   }
 
   body {
-    @apply bg-abyss text-ink font-sans antialiased;
+    @apply text-ink font-sans antialiased;
     min-height: 100dvh;
-    /* The living ocean: deep teal pooling up into divine light at the top */
-    background-color: #021f1e;
-    background-image:
-      radial-gradient(80% 55% at 50% -10%, rgba(253, 224, 138, 0.12) 0%, rgba(253, 224, 138, 0) 60%),
-      radial-gradient(120% 80% at 50% 0%, #0e5c57 0%, #042f2e 48%, #021f1e 100%);
+    /* The living ocean (dark) — or a calm light wash in light mode */
+    background-color: var(--body-bg);
+    background-image: var(--body-grad);
     background-attachment: fixed;
     text-rendering: optimizeLegibility;
+    transition:
+      background-color 0.4s ease,
+      color 0.4s ease;
   }
 
   ::selection {
@@ -49,7 +103,7 @@
     height: 8px;
   }
   *::-webkit-scrollbar-thumb {
-    background: rgba(240, 253, 250, 0.16);
+    background: rgb(var(--surface) / 0.16);
     border-radius: 999px;
   }
   *::-webkit-scrollbar-track {
@@ -60,28 +114,28 @@
 @layer components {
   /* ── Glass surfaces ─────────────────────────────────────────────────── */
   .glass {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-bd);
     backdrop-filter: blur(22px) saturate(120%);
     -webkit-backdrop-filter: blur(22px) saturate(120%);
     box-shadow:
-      0 8px 40px -8px rgba(4, 47, 46, 0.5),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+      0 8px 40px -8px var(--glass-shadow),
+      inset 0 1px 0 0 var(--glass-inset);
   }
 
   .glass-strong {
-    background: rgba(255, 255, 255, 0.13);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--glass-bg-strong);
+    border: 1px solid var(--glass-bd-strong);
     backdrop-filter: blur(28px) saturate(130%);
     -webkit-backdrop-filter: blur(28px) saturate(130%);
     box-shadow:
-      0 20px 70px -12px rgba(4, 47, 46, 0.62),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+      0 20px 70px -12px var(--glass-shadow-lg),
+      inset 0 1px 0 0 var(--glass-inset);
   }
 
   .glass-soft {
-    background: rgba(255, 255, 255, 0.055);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--glass-bg-soft);
+    border: 1px solid var(--glass-bd-soft);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
@@ -184,30 +238,48 @@ html.lenis body {
   background-color: rgba(253, 164, 175, 0.3);
 }
 
-/* ── Themes (data-theme on <html>) ───────────────────────────────────── */
+/* ── Themes (data-theme on <html>) — dark mode only ──────────────────── */
 .theme-veil {
-  background: transparent;
+  background: var(--scenery-veil);
   transition: background-color 0.7s ease;
 }
 /* Midnight — deepen and dim the bright background for low-light rooms */
-html[data-theme='midnight'] body {
+html[data-resolved-mode='dark'][data-theme='midnight'] body {
   background-color: #010c0c;
   background-image:
     radial-gradient(78% 52% at 50% -10%, rgba(253, 224, 138, 0.05) 0%, rgba(253, 224, 138, 0) 60%),
     radial-gradient(120% 80% at 50% 0%, #073e3a 0%, #021a19 48%, #010c0c 100%);
 }
-html[data-theme='midnight'] .theme-veil {
+html[data-resolved-mode='dark'][data-theme='midnight'] .theme-veil {
   background: rgba(1, 10, 13, 0.5);
 }
 /* Candle — warm, low-blue glow for night and rest */
-html[data-theme='candle'] body {
+html[data-resolved-mode='dark'][data-theme='candle'] body {
   background-color: #0a0703;
   background-image:
     radial-gradient(78% 52% at 50% -10%, rgba(253, 200, 120, 0.1) 0%, rgba(253, 200, 120, 0) 62%),
     radial-gradient(120% 80% at 50% 0%, #3a2410 0%, #15100a 50%, #0a0703 100%);
 }
-html[data-theme='candle'] .theme-veil {
+html[data-resolved-mode='dark'][data-theme='candle'] .theme-veil {
   background: rgba(56, 30, 6, 0.52);
+}
+
+/* ── Font size + font style (data-* on <html>) ───────────────────────── */
+html[data-font-size='sm'] {
+  font-size: 93.75%;
+}
+html[data-font-size='lg'] {
+  font-size: 112.5%;
+}
+html[data-font-size='xl'] {
+  font-size: 125%;
+}
+html[data-font='serif'] body {
+  font-family: var(--font-display), Georgia, 'Times New Roman', serif;
+}
+html[data-font='system'] body {
+  font-family:
+    system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* Respect the user's wish for calm — honor reduced motion everywhere */

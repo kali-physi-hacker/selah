@@ -32,8 +32,8 @@ export function StillnessClient({ pool }: { pool: DV[] }) {
             className="rounded-pill px-4 py-2 text-sm font-medium transition-colors"
             style={
               tab === t
-                ? { background: 'rgba(255,255,255,0.16)', color: '#F0FDFA' }
-                : { color: 'rgba(240,253,250,0.6)' }
+                ? { background: 'rgb(var(--surface) / 0.16)', color: 'rgb(var(--ink))' }
+                : { color: 'rgb(var(--ink) / 0.6)' }
             }
           >
             {t === 'still' ? 'Stillness' : 'Quiet time'}

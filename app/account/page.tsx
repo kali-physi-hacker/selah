@@ -63,7 +63,7 @@ export default function AccountPage() {
         >
           <span
             className="flex h-11 w-11 flex-none items-center justify-center rounded-full"
-            style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255,255,255,0.92), rgba(253,230,138,0.4) 60%, transparent)' }}
+            style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.92), rgba(253,230,138,0.4) 60%, transparent)' }}
           >
             <Icon name="flame" size={19} aria-hidden className="text-abyss" />
           </span>

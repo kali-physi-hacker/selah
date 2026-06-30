@@ -88,7 +88,7 @@ export function QuietTime({ accent = '#67E8F9', pool }: { accent?: string; pool:
         <button
           onClick={begin}
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-card px-5 py-4 font-medium text-ink transition-transform active:scale-[0.99]"
-          style={{ background: `linear-gradient(135deg, ${hexToRgba(accent, 0.32)}, rgba(255,255,255,0.05))`, border: `1px solid ${hexToRgba(accent, 0.4)}` }}
+          style={{ background: `linear-gradient(135deg, ${hexToRgba(accent, 0.32)}, rgb(var(--surface) / 0.05))`, border: `1px solid ${hexToRgba(accent, 0.4)}` }}
         >
           <Icon name="play" size={18} aria-hidden /> Begin quiet time · {TOTAL} min
         </button>
@@ -125,7 +125,7 @@ export function QuietTime({ accent = '#67E8F9', pool }: { accent?: string; pool:
           {/* phase progress dots */}
           <div className="mb-5 flex items-center gap-1.5">
             {PHASES.map((p, i) => (
-              <span key={p.name} className="h-1.5 rounded-full transition-all" style={{ width: i === index ? 22 : 8, background: i <= index ? accent : 'rgba(255,255,255,0.18)' }} />
+              <span key={p.name} className="h-1.5 rounded-full transition-all" style={{ width: i === index ? 22 : 8, background: i <= index ? accent : 'rgb(var(--surface) / 0.18)' }} />
             ))}
           </div>
           <BreathOrb accent={accent} />

@@ -95,8 +95,8 @@ export function MeditationSession({ accent = '#67E8F9' }: { accent?: string }) {
               className="rounded-pill px-4 py-2 text-sm font-medium transition-colors"
               style={
                 minutes === m
-                  ? { background: hexToRgba(accent, 0.3), color: '#F0FDFA', boxShadow: `inset 0 0 0 1px ${hexToRgba(accent, 0.5)}` }
-                  : { background: 'rgba(255,255,255,0.06)', color: 'rgba(240,253,250,0.7)' }
+                  ? { background: hexToRgba(accent, 0.3), color: 'rgb(var(--ink))', boxShadow: `inset 0 0 0 1px ${hexToRgba(accent, 0.5)}` }
+                  : { background: 'rgb(var(--surface) / 0.06)', color: 'rgb(var(--ink) / 0.7)' }
               }
             >
               {m} min
@@ -110,7 +110,7 @@ export function MeditationSession({ accent = '#67E8F9' }: { accent?: string }) {
         <button
           onClick={begin}
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-card px-5 py-4 font-medium text-ink transition-transform active:scale-[0.99]"
-          style={{ background: `linear-gradient(135deg, ${hexToRgba(accent, 0.32)}, rgba(255,255,255,0.05))`, border: `1px solid ${hexToRgba(accent, 0.4)}` }}
+          style={{ background: `linear-gradient(135deg, ${hexToRgba(accent, 0.32)}, rgb(var(--surface) / 0.05))`, border: `1px solid ${hexToRgba(accent, 0.4)}` }}
         >
           <Icon name="play" size={18} aria-hidden /> Begin {minutes}-minute stillness
         </button>
@@ -174,7 +174,7 @@ export function MeditationSession({ accent = '#67E8F9' }: { accent?: string }) {
               aria-pressed={metronome}
               title={metronome ? 'Metronome on' : 'Metronome off'}
               className="flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-white/12"
-              style={metronome ? { background: hexToRgba(accent, 0.25), color: '#F0FDFA' } : { background: 'rgba(255,255,255,0.08)', color: 'rgba(240,253,250,0.6)' }}
+              style={metronome ? { background: hexToRgba(accent, 0.25), color: 'rgb(var(--ink))' } : { background: 'rgb(var(--surface) / 0.08)', color: 'rgb(var(--ink) / 0.6)' }}
             >
               <Icon name="hourglass" size={16} aria-hidden />
             </button>

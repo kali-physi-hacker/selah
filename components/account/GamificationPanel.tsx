@@ -15,7 +15,7 @@ export function GamificationPanel({ acts }: { acts: ActMeta[] }) {
       <div className="flex items-center gap-4">
         <div className="relative flex h-16 w-16 flex-none items-center justify-center">
           <svg viewBox="0 0 36 36" className="absolute inset-0 h-16 w-16 -rotate-90">
-            <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2.5" />
+            <circle cx="18" cy="18" r="16" fill="none" stroke="rgb(var(--surface) / 0.1)" strokeWidth="2.5" />
             <circle
               cx="18"
               cy="18"

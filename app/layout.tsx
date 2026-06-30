@@ -11,6 +11,7 @@ import { AuthProvider } from '@/components/auth/AuthProvider';
 import { AUTH_ENABLED } from '@/lib/authEnabled';
 import { ThemeScript, ThemeVeil } from '@/components/theme/Theme';
 import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
+import { AppearanceProvider } from '@/components/appearance/AppearanceProvider';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -96,6 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SmoothScroll />
         <ServiceWorkerRegister />
         <AnalyticsProvider />
+        <AppearanceProvider />
         {AUTH_ENABLED ? <AuthProvider>{shell}</AuthProvider> : shell}
       </body>
     </html>

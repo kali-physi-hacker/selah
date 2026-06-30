@@ -63,8 +63,8 @@ export function GlossaryIndex({
               className="whitespace-nowrap rounded-pill px-3 py-1 text-xs font-medium transition-colors"
               style={
                 lang === l
-                  ? { background: 'rgba(255,255,255,0.16)', color: '#F0FDFA' }
-                  : { color: 'rgba(240,253,250,0.55)' }
+                  ? { background: 'rgb(var(--surface) / 0.16)', color: 'rgb(var(--ink))' }
+                  : { color: 'rgb(var(--ink) / 0.55)' }
               }
             >
               {l}
@@ -82,7 +82,7 @@ export function GlossaryIndex({
                 <h2 className="font-display text-xl italic text-ink">{g.term}</h2>
                 <span
                   className="pill flex-none text-[0.62rem] uppercase tracking-wider"
-                  style={{ background: hexToRgba(color, 0.2), color: '#F0FDFA' }}
+                  style={{ background: hexToRgba(color, 0.2), color: 'rgb(var(--ink))' }}
                 >
                   {g.language}
                 </span>

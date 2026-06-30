@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { PageHeader } from '@/components/PageHeader';
 import { PageBackdrop } from '@/components/PageBackdrop';
 import { SectionPanel } from '@/components/SectionPanel';
+import { AppearanceControls } from '@/components/appearance/AppearanceControls';
 import { ThemePicker } from '@/components/theme/ThemePicker';
 import { SoundPicker } from '@/components/audio/SoundPicker';
 
@@ -21,10 +22,14 @@ export default function SettingsPage() {
         back={{ href: '/about', label: 'More' }}
       />
       <div className="mt-6 space-y-5 px-4 sm:px-6">
-        <SectionPanel id="theme" eyebrow="For your space & the hour" title="Theme" icon="sun">
+        <SectionPanel id="display" eyebrow="Comfort & readability" title="Display" icon="sun">
+          <AppearanceControls />
+        </SectionPanel>
+
+        <SectionPanel id="theme" eyebrow="The dark palette" title="Theme" icon="moon">
           <p className="mb-4 text-sm leading-relaxed text-ink-muted">
-            Selah is calm and dark by design. For dim rooms or late nights, Midnight deepens the
-            light and Candle warms it (gentler on tired eyes).
+            For dark mode: Ocean is the luminous default, Midnight deepens the light for dim rooms,
+            and Candle warms it (gentler on tired eyes).
           </p>
           <ThemePicker />
         </SectionPanel>

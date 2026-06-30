@@ -37,7 +37,7 @@ export default function HomePage() {
           >
             <span
               className="flex h-11 w-11 items-center justify-center rounded-full"
-              style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255,255,255,0.92), rgba(103,232,249,0.32) 60%, transparent)' }}
+              style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.92), rgba(103,232,249,0.32) 60%, transparent)' }}
             >
               <Icon name="feather" size={19} aria-hidden className="text-abyss" />
             </span>
@@ -50,7 +50,7 @@ export default function HomePage() {
           >
             <span
               className="flex h-11 w-11 items-center justify-center rounded-full"
-              style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255,255,255,0.92), rgba(253,230,138,0.4) 60%, transparent)' }}
+              style={{ background: 'radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.92), rgba(253,230,138,0.4) 60%, transparent)' }}
             >
               <Icon name="flame" size={19} aria-hidden className="text-abyss" />
             </span>

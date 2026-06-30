@@ -118,7 +118,7 @@ export function AccountClient() {
       </p>
       <button
         onClick={() => signIn('google', { callbackUrl: '/account' })}
-        className="mx-auto mt-5 flex items-center justify-center gap-3 rounded-pill bg-white px-6 py-3 text-sm font-medium text-[#1f1f1f] shadow-glass transition-transform active:scale-[0.98]"
+        className="mx-auto mt-5 flex items-center justify-center gap-3 rounded-pill bg-pure px-6 py-3 text-sm font-medium text-[#1f1f1f] shadow-glass transition-transform active:scale-[0.98]"
       >
         <GoogleMark />
         Continue with Google

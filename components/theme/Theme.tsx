@@ -1,11 +1,27 @@
 import { THEME_KEY, DEFAULT_THEME } from '@/lib/theme';
+import {
+  MODE_KEY,
+  DEFAULT_MODE,
+  FONT_SIZE_KEY,
+  DEFAULT_FONT_SIZE,
+  FONT_KEY,
+  DEFAULT_FONT,
+} from '@/lib/appearance';
 
 /**
- * Sets <html data-theme> from localStorage before first paint, so there's no
- * flash of the default theme. Rendered in <head>.
+ * Applies all appearance prefs (theme, light/dark/system mode, font size, font
+ * style) to <html> from localStorage before first paint — no flash. In <head>.
  */
 export function ThemeScript() {
-  const js = `(function(){try{var t=localStorage.getItem('${THEME_KEY}');document.documentElement.setAttribute('data-theme',t||'${DEFAULT_THEME}');}catch(e){document.documentElement.setAttribute('data-theme','${DEFAULT_THEME}');}})();`;
+  const js = `(function(){try{var d=document.documentElement;
+d.setAttribute('data-theme',localStorage.getItem('${THEME_KEY}')||'${DEFAULT_THEME}');
+var m=localStorage.getItem('${MODE_KEY}')||'${DEFAULT_MODE}';
+var r=m==='system'?(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;
+d.setAttribute('data-mode',m);
+d.setAttribute('data-resolved-mode',r);
+d.setAttribute('data-font-size',localStorage.getItem('${FONT_SIZE_KEY}')||'${DEFAULT_FONT_SIZE}');
+d.setAttribute('data-font',localStorage.getItem('${FONT_KEY}')||'${DEFAULT_FONT}');
+}catch(e){document.documentElement.setAttribute('data-resolved-mode','dark');}})();`;
   return <script dangerouslySetInnerHTML={{ __html: js }} />;
 }
 

@@ -14,7 +14,7 @@ export function ChristPanel({ christ }: { christ: ChristConnection }) {
     <div
       className="rounded-card p-5"
       style={{
-        background: `linear-gradient(160deg, ${hexToRgba(THREAD, 0.12)}, rgba(255,255,255,0.03))`,
+        background: `linear-gradient(160deg, ${hexToRgba(THREAD, 0.12)}, rgb(var(--surface) / 0.03))`,
         border: `1px solid ${hexToRgba(THREAD, 0.25)}`,
       }}
     >

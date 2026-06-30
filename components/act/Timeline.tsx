@@ -33,7 +33,7 @@ export function Timeline({ events, accent }: { events: TimelineEvent[]; accent: 
               <div className="flex items-center gap-2">
                 <span
                   className="flex h-7 w-7 flex-none items-center justify-center rounded-full text-[0.7rem] font-semibold"
-                  style={{ background: hexToRgba(accent, 0.45), color: '#F0FDFA' }}
+                  style={{ background: hexToRgba(accent, 0.45), color: 'rgb(var(--ink))' }}
                 >
                   {i + 1}
                 </span>

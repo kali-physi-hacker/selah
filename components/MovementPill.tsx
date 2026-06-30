@@ -15,7 +15,7 @@ export function MovementPill({ label, accent, active = false, className = '' }: 
       style={{
         background: hexToRgba(accent, active ? 0.28 : 0.14),
         border: `1px solid ${hexToRgba(accent, active ? 0.6 : 0.32)}`,
-        color: '#F0FDFA',
+        color: 'rgb(var(--ink))',
       }}
     >
       <span

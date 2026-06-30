@@ -80,7 +80,7 @@ export function PrayerClient() {
                 key={d}
                 title={d}
                 className="flex h-7 w-7 items-center justify-center rounded-full text-[0.6rem]"
-                style={prayed.has(d) ? { background: 'rgba(253,230,138,0.25)', color: '#FDE68A' } : { background: 'rgba(255,255,255,0.05)', color: 'rgba(240,253,250,0.4)' }}
+                style={prayed.has(d) ? { background: 'rgba(253,230,138,0.25)', color: '#FDE68A' } : { background: 'rgb(var(--surface) / 0.05)', color: 'rgb(var(--ink) / 0.4)' }}
               >
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'][i]}
               </span>

@@ -130,8 +130,8 @@ export function PrayerSession() {
                 className="rounded-pill px-4 py-2 text-sm font-medium transition-colors"
                 style={
                   active
-                    ? { background: hexToRgba(ACCENT, 0.28), color: '#F0FDFA', boxShadow: `inset 0 0 0 1px ${hexToRgba(ACCENT, 0.5)}` }
-                    : { background: 'rgba(255,255,255,0.06)', color: 'rgba(240,253,250,0.7)' }
+                    ? { background: hexToRgba(ACCENT, 0.28), color: 'rgb(var(--ink))', boxShadow: `inset 0 0 0 1px ${hexToRgba(ACCENT, 0.5)}` }
+                    : { background: 'rgb(var(--surface) / 0.06)', color: 'rgb(var(--ink) / 0.7)' }
                 }
               >
                 {durLabel(m)}
@@ -147,8 +147,8 @@ export function PrayerSession() {
             className="rounded-pill px-4 py-2 text-sm font-medium transition-colors"
             style={
               isCustom
-                ? { background: hexToRgba(ACCENT, 0.28), color: '#F0FDFA', boxShadow: `inset 0 0 0 1px ${hexToRgba(ACCENT, 0.5)}` }
-                : { background: 'rgba(255,255,255,0.06)', color: 'rgba(240,253,250,0.7)' }
+                ? { background: hexToRgba(ACCENT, 0.28), color: 'rgb(var(--ink))', boxShadow: `inset 0 0 0 1px ${hexToRgba(ACCENT, 0.5)}` }
+                : { background: 'rgb(var(--surface) / 0.06)', color: 'rgb(var(--ink) / 0.7)' }
             }
           >
             Custom
@@ -180,7 +180,7 @@ export function PrayerSession() {
         <button
           onClick={begin}
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-card px-5 py-4 font-medium text-ink transition-transform active:scale-[0.99]"
-          style={{ background: `linear-gradient(135deg, ${hexToRgba(ACCENT, 0.34)}, rgba(255,255,255,0.05))`, border: `1px solid ${hexToRgba(ACCENT, 0.45)}` }}
+          style={{ background: `linear-gradient(135deg, ${hexToRgba(ACCENT, 0.34)}, rgb(var(--surface) / 0.05))`, border: `1px solid ${hexToRgba(ACCENT, 0.45)}` }}
         >
           <Icon name="play" size={18} aria-hidden /> Begin prayer · {durLabel(duration)}
         </button>

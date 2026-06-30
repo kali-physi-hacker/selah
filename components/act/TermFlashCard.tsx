@@ -33,7 +33,7 @@ export function TermFlashCard({ term }: { term: TermCard }) {
       <div className="flex items-center justify-between">
         <span
           className="pill text-[0.62rem] uppercase tracking-wider"
-          style={{ background: hexToRgba(color, 0.2), color: '#F0FDFA' }}
+          style={{ background: hexToRgba(color, 0.2), color: 'rgb(var(--ink))' }}
         >
           {term.language}
         </span>
