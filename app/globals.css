@@ -170,6 +170,20 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* ── Text highlights (CSS Custom Highlight API) ──────────────────────── */
+::highlight(selah-amber) {
+  background-color: rgba(252, 211, 77, 0.32);
+}
+::highlight(selah-green) {
+  background-color: rgba(110, 231, 183, 0.28);
+}
+::highlight(selah-sky) {
+  background-color: rgba(125, 211, 252, 0.3);
+}
+::highlight(selah-rose) {
+  background-color: rgba(253, 164, 175, 0.3);
+}
+
 /* ── Themes (data-theme on <html>) ───────────────────────────────────── */
 .theme-veil {
   background: transparent;

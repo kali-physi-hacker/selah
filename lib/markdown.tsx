@@ -52,21 +52,24 @@ function renderItalic(text: string): React.ReactNode[] {
 interface MarkdownProps {
   content: string;
   className?: string;
+  /** When set, each block is highlightable (data-hl-block = `${hlId}:${index}`). */
+  hlId?: string;
 }
 
 /** Render a content body string as calm, readable prose. */
-export function Markdown({ content, className }: MarkdownProps) {
+export function Markdown({ content, className, hlId }: MarkdownProps) {
   const blocks = content.trim().split(/\n{2,}/);
 
   return (
     <div className={className}>
-      {blocks.map((block) => {
+      {blocks.map((block, i) => {
         const lines = block.split('\n');
         const isList = lines.every((l) => l.trim().startsWith('- '));
+        const hlBlock = hlId ? `${hlId}:${i}` : undefined;
 
         if (isList) {
           return (
-            <ul key={nextKey()} className="my-3 space-y-2 pl-1">
+            <ul key={nextKey()} data-hl-block={hlBlock} className="my-3 space-y-2 pl-1">
               {lines.map((line) => (
                 <li key={nextKey()} className="flex gap-3 text-ink-muted">
                   <span
@@ -83,7 +86,11 @@ export function Markdown({ content, className }: MarkdownProps) {
         }
 
         return (
-          <p key={nextKey()} className="my-3 leading-relaxed text-ink-muted first:mt-0 last:mb-0">
+          <p
+            key={nextKey()}
+            data-hl-block={hlBlock}
+            className="my-3 leading-relaxed text-ink-muted first:mt-0 last:mb-0"
+          >
             {renderInline(block)}
           </p>
         );

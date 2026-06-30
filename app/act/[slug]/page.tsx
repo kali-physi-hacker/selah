@@ -19,6 +19,7 @@ import { Reflection } from '@/components/act/Reflection';
 import { QandA } from '@/components/act/QandA';
 import { FullCircleSection } from '@/components/act/FullCircleSection';
 import { ActFooter } from '@/components/act/ActFooter';
+import { HighlightController } from '@/components/highlight/HighlightController';
 import { Reveal } from '@/components/Reveal';
 
 // The 15 acts are the only valid slugs — anything else is a true 404.
@@ -66,6 +67,7 @@ export default function ActPage({ params }: { params: { slug: string } }) {
         priority
       />
       <VisitTracker slug={act.slug} />
+      <HighlightController actSlug={act.slug} label={`${act.number}. ${act.title}`} />
       <ActHeader act={act} />
 
       <div className="mt-5">
@@ -75,12 +77,12 @@ export default function ActPage({ params }: { params: { slug: string } }) {
       <div className="mt-5 space-y-5 px-4 sm:px-6">
         {/* Overview + Context */}
         <SectionPanel id="overview" eyebrow="The big picture" title="Overview" icon="compass" accent={act.accent}>
-          <Markdown content={act.overview} />
+          <Markdown content={act.overview} hlId={`${act.slug}:overview`} />
           <div className="mt-5 rounded-control border border-white/10 bg-white/[0.04] p-4">
             <p className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-ink-faint">
               Context · authorship, setting, purpose
             </p>
-            <Markdown content={act.context} />
+            <Markdown content={act.context} hlId={`${act.slug}:context`} />
           </div>
         </SectionPanel>
 
@@ -94,7 +96,7 @@ export default function ActPage({ params }: { params: { slug: string } }) {
                   <h3 className="mb-1.5 font-display text-lg leading-snug text-ink">
                     {section.heading}
                   </h3>
-                  <Markdown content={section.body} />
+                  <Markdown content={section.body} hlId={`${act.slug}:dd-${section.id}`} />
                 </article>
               ))}
             </div>

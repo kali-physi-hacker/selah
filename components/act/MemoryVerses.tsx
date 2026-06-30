@@ -50,7 +50,12 @@ function VerseRow({
       style={{ background: hexToRgba(accent, 0.07), border: `1px solid ${hexToRgba(accent, 0.18)}` }}
     >
       {verse.text && (
-        <p className="scripture text-base leading-relaxed text-ink">“{verse.text}”</p>
+        <p
+          data-hl-block={`${actSlug}:verse-${verse.ref}`}
+          className="scripture text-base leading-relaxed text-ink"
+        >
+          “{verse.text}”
+        </p>
       )}
       <div className="mt-3 flex items-center justify-between gap-2">
         <span className="text-xs font-medium uppercase tracking-[0.14em] text-ink-faint">

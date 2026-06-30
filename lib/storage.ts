@@ -54,4 +54,8 @@ export const STORAGE_KEYS = {
   prayer: 'selah:prayer:v1',
   achievements: 'selah:achievements:v1',
   leaderboardOptOut: 'selah:leaderboard-optout:v1',
+  highlights: 'selah:highlights:v1',
+  notebook: 'selah:notebook:v1',
+  prayerStats: 'selah:prayer-stats:v1',
+  revelations: 'selah:revelations:v1',
 } as const;
