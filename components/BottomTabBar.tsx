@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from './Icon';
 import { AUTH_ENABLED } from '@/lib/authEnabled';
+import { AccountAvatar } from '@/components/auth/AccountAvatar';
 
 const TABS = [
   { href: '/', label: 'Journey', icon: 'compass' },
@@ -50,13 +51,17 @@ export function BottomTabBar() {
                     active ? 'bg-white/12' : 'group-hover:bg-white/6'
                   }`}
                 >
-                  <Icon
-                    name={tab.icon}
-                    size={20}
-                    strokeWidth={active ? 2.1 : 1.7}
-                    aria-hidden
-                    className={active ? 'text-aqua' : 'text-ink-muted'}
-                  />
+                  {tab.href === '/account' ? (
+                    <AccountAvatar size={22} active={active} />
+                  ) : (
+                    <Icon
+                      name={tab.icon}
+                      size={20}
+                      strokeWidth={active ? 2.1 : 1.7}
+                      aria-hidden
+                      className={active ? 'text-aqua' : 'text-ink-muted'}
+                    />
+                  )}
                 </span>
                 <span className={active ? 'text-ink' : 'text-ink-faint'}>{tab.label}</span>
               </Link>

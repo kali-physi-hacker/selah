@@ -24,6 +24,7 @@ import {
   Languages,
   LucideIcon,
   Mail,
+  Moon,
   MoreHorizontal,
   Mountain,
   Pause,
@@ -32,6 +33,7 @@ import {
   Quote,
   RotateCcw,
   Search,
+  Settings,
   Share,
   Sparkles,
   Star,
@@ -90,6 +92,8 @@ const ICONS: Record<string, LucideIcon> = {
   share: Share,
   download: Download,
   account: CircleUser,
+  settings: Settings,
+  moon: Moon,
 };
 
 export interface IconProps {

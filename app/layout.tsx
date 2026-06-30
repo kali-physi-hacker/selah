@@ -9,6 +9,7 @@ import { ServiceWorkerRegister } from '@/components/pwa/ServiceWorkerRegister';
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { AuthProvider } from '@/components/auth/AuthProvider';
 import { AUTH_ENABLED } from '@/lib/authEnabled';
+import { ThemeScript, ThemeVeil } from '@/components/theme/Theme';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -63,15 +64,26 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const content = (
-    // Mobile: room for the bottom tab bar. Desktop: room for the top bar.
-    <div id="content" className="relative mx-auto min-h-dvh w-full max-w-3xl pb-28 md:pb-16 md:pt-20">
-      {children}
-    </div>
+  // The whole interactive shell — wrapped in the auth session context (when
+  // enabled) so the nav can show the signed-in avatar.
+  const shell = (
+    <>
+      <InstallPrompt />
+      <TopNav />
+      {/* Mobile: room for the bottom tab bar. Desktop: room for the top bar. */}
+      <div id="content" className="relative mx-auto min-h-dvh w-full max-w-3xl pb-28 md:pb-16 md:pt-20">
+        {children}
+      </div>
+      <AmbientPlayer />
+      <BottomTabBar />
+    </>
   );
 
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
+      <head>
+        <ThemeScript />
+      </head>
       <body>
         <a
           href="#content"
@@ -79,13 +91,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
+        <ThemeVeil />
         <SmoothScroll />
         <ServiceWorkerRegister />
-        <InstallPrompt />
-        <TopNav />
-        {AUTH_ENABLED ? <AuthProvider>{content}</AuthProvider> : content}
-        <AmbientPlayer />
-        <BottomTabBar />
+        {AUTH_ENABLED ? <AuthProvider>{shell}</AuthProvider> : shell}
       </body>
     </html>
   );

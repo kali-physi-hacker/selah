@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { DataControls } from '@/components/about/DataControls';
 import { PageBackdrop } from '@/components/PageBackdrop';
 import { aboutScenery, IMAGE_CREDIT } from '@/lib/imagery';
-import { AMBIENT_TRACK_SRC, AMBIENT_CREDIT } from '@/lib/ambientAudio';
+import { AMBIENT_ATTRIBUTION } from '@/lib/ambientAudio';
 import { AUTH_ENABLED } from '@/lib/authEnabled';
 import { Icon } from '@/components/Icon';
 
@@ -22,16 +22,25 @@ const HOW_TO = [
 ];
 
 const LINKS = [
+  { href: '/stillness', icon: 'feather', title: 'Stillness', body: 'Timed meditation & guided quiet time.' },
+  { href: '/settings', icon: 'settings', title: 'Settings', body: 'Theme (incl. low-light) & soundscape.' },
   ...(AUTH_ENABLED
     ? [
         {
           href: '/account',
-          icon: 'sparkles',
+          icon: 'account',
           title: 'Account',
-          body: 'Optional — sign in to sync across devices.',
+          body: 'Your stats, prayers & cross-device sync.',
         },
       ]
-    : []),
+    : [
+        {
+          href: '/account',
+          icon: 'account',
+          title: 'Account',
+          body: 'Your stats and prayer journal.',
+        },
+      ]),
   { href: '/people', icon: 'users', title: 'People', body: 'The figures who carry the story.' },
   { href: '/glossary', icon: 'languages', title: 'Glossary', body: 'Hebrew & Greek words that unlock the text.' },
   { href: '/read', icon: 'book-open', title: 'Reading plan', body: 'Master the whole Bible in 30 days.' },
@@ -114,9 +123,7 @@ export default function AboutPage() {
       <p className="mt-8 text-center text-xs leading-relaxed text-ink-faint">
         {IMAGE_CREDIT}
         <br />
-        {AMBIENT_TRACK_SRC
-          ? `Ambient music: ${AMBIENT_CREDIT}`
-          : 'The ambient soundscape is synthesized live in your browser — nothing copyrighted.'}
+        {AMBIENT_ATTRIBUTION}
         <br />
         Made as a quiet place to dwell. May it be, for you, a true <span className="scripture">selah</span>.
       </p>

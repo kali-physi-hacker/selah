@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AUTH_ENABLED } from '@/lib/authEnabled';
+import { AccountAvatar } from '@/components/auth/AccountAvatar';
 
 const LINKS = [
   { href: '/', label: 'Journey' },
+  { href: '/stillness', label: 'Stillness' },
   { href: '/read', label: 'Read' },
   { href: '/search', label: 'Search' },
   { href: '/bookmarks', label: 'Saved' },
@@ -44,10 +46,11 @@ export function TopNav() {
                 <Link
                   href={l.href}
                   aria-current={active ? 'page' : undefined}
-                  className={`rounded-pill px-3.5 py-1.5 text-sm font-medium transition-colors ${
-                    active ? 'bg-white/14 text-ink' : 'text-ink-faint hover:bg-white/6 hover:text-ink-muted'
-                  }`}
+                  className={`flex items-center gap-1.5 rounded-pill py-1.5 text-sm font-medium transition-colors ${
+                    l.href === '/account' ? 'pl-1.5 pr-3' : 'px-3.5'
+                  } ${active ? 'bg-white/14 text-ink' : 'text-ink-faint hover:bg-white/6 hover:text-ink-muted'}`}
                 >
+                  {l.href === '/account' && <AccountAvatar size={22} active={active} />}
                   {l.label}
                 </Link>
               </li>
