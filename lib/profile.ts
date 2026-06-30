@@ -1,6 +1,8 @@
 import { readJSON, writeJSON, STORAGE_KEYS } from './storage';
 import type { ProgressState } from './useProgress';
 import type { Bookmark, NotesMap } from './useBookmarks';
+import type { Prayer } from './usePrayer';
+import type { MeditationStats } from './useMeditation';
 
 /**
  * The synced profile = the subset of local state we mirror to the cloud for
@@ -13,6 +15,8 @@ export interface ProfileData {
   bookmarks?: Bookmark[];
   notes?: NotesMap;
   readingPlan?: number[];
+  prayer?: Prayer[];
+  meditation?: MeditationStats;
 }
 
 export const SYNCED_KEYS: string[] = [
@@ -20,6 +24,8 @@ export const SYNCED_KEYS: string[] = [
   STORAGE_KEYS.bookmarks,
   STORAGE_KEYS.notes,
   STORAGE_KEYS.readingPlan,
+  STORAGE_KEYS.prayer,
+  STORAGE_KEYS.meditation,
 ];
 
 export function readLocalProfile(): ProfileData {
@@ -28,6 +34,8 @@ export function readLocalProfile(): ProfileData {
     bookmarks: readJSON<Bookmark[] | undefined>(STORAGE_KEYS.bookmarks, undefined),
     notes: readJSON<NotesMap | undefined>(STORAGE_KEYS.notes, undefined),
     readingPlan: readJSON<number[] | undefined>(STORAGE_KEYS.readingPlan, undefined),
+    prayer: readJSON<Prayer[] | undefined>(STORAGE_KEYS.prayer, undefined),
+    meditation: readJSON<MeditationStats | undefined>(STORAGE_KEYS.meditation, undefined),
   };
 }
 
@@ -36,6 +44,8 @@ export function writeLocalProfile(p: ProfileData): void {
   if (p.bookmarks) writeJSON(STORAGE_KEYS.bookmarks, p.bookmarks);
   if (p.notes) writeJSON(STORAGE_KEYS.notes, p.notes);
   if (p.readingPlan) writeJSON(STORAGE_KEYS.readingPlan, p.readingPlan);
+  if (p.prayer) writeJSON(STORAGE_KEYS.prayer, p.prayer);
+  if (p.meditation) writeJSON(STORAGE_KEYS.meditation, p.meditation);
 }
 
 const union = <T>(a?: T[], b?: T[]): T[] => Array.from(new Set([...(a ?? []), ...(b ?? [])]));
@@ -67,6 +77,31 @@ function mergeBookmarks(a?: Bookmark[], b?: Bookmark[]): Bookmark[] {
   return Array.from(byId.values()).sort((x, y) => (x.createdAt < y.createdAt ? 1 : -1));
 }
 
+function mergePrayers(a?: Prayer[], b?: Prayer[]): Prayer[] {
+  const byId = new Map<string, Prayer>();
+  for (const p of b ?? []) byId.set(p.id, p);
+  for (const p of a ?? []) {
+    const existing = byId.get(p.id);
+    byId.set(
+      p.id,
+      existing
+        ? { ...p, answered: p.answered || existing.answered, answeredAt: p.answeredAt ?? existing.answeredAt }
+        : p,
+    );
+  }
+  return Array.from(byId.values()).sort((x, y) => (x.createdAt < y.createdAt ? 1 : -1));
+}
+
+function mergeMeditation(a?: MeditationStats, b?: MeditationStats): MeditationStats | undefined {
+  if (!a) return b;
+  if (!b) return a;
+  return {
+    totalMinutes: Math.max(a.totalMinutes, b.totalMinutes),
+    sessions: Math.max(a.sessions, b.sessions),
+    lastDate: later(a.lastDate, b.lastDate),
+  };
+}
+
 /** Merge two profiles. `local` takes precedence on genuine conflicts. */
 export function mergeProfiles(local: ProfileData, cloud: ProfileData): ProfileData {
   return {
@@ -74,5 +109,7 @@ export function mergeProfiles(local: ProfileData, cloud: ProfileData): ProfileDa
     bookmarks: mergeBookmarks(local.bookmarks, cloud.bookmarks),
     notes: { ...(cloud.notes ?? {}), ...(local.notes ?? {}) },
     readingPlan: union(local.readingPlan, cloud.readingPlan).sort((x, y) => x - y),
+    prayer: mergePrayers(local.prayer, cloud.prayer),
+    meditation: mergeMeditation(local.meditation, cloud.meditation),
   };
 }

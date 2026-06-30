@@ -50,4 +50,6 @@ export const STORAGE_KEYS = {
   readingPlan: 'selah:reading-plan:v1',
   sound: 'selah:sound:v1',
   installDismissed: 'selah:install-dismissed:v1',
+  meditation: 'selah:meditation:v1',
+  prayer: 'selah:prayer:v1',
 } as const;

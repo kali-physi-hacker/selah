@@ -1,40 +1,55 @@
 import type { Metadata } from 'next';
+import { acts } from '@/content';
+import { toMeta } from '@/lib/actMeta';
 import { PageHeader } from '@/components/PageHeader';
 import { PageBackdrop } from '@/components/PageBackdrop';
+import { SectionPanel } from '@/components/SectionPanel';
 import { AccountClient } from '@/components/account/AccountClient';
+import { ProfileStats } from '@/components/account/ProfileStats';
+import { PrayerJournal } from '@/components/prayer/PrayerJournal';
 import { Icon } from '@/components/Icon';
 import { AUTH_ENABLED } from '@/lib/authEnabled';
 
 export const metadata: Metadata = {
   title: 'Account',
-  description: 'Optionally sign in to sync your bookmarks and progress across devices.',
+  description: 'Your journey, your prayers, and optional cross-device sync.',
 };
 
 export default function AccountPage() {
+  const meta = acts.map(toMeta);
+
   return (
     <main className="pb-8">
       <PageBackdrop immersive={false} />
       <PageHeader
-        eyebrow="Optional sign-in"
+        eyebrow="Your journey"
         title="Account"
-        subtitle="Selah is yours to use freely without an account. Signing in only adds cross-device sync for your bookmarks, notes, and progress."
+        subtitle="Your progress and prayers — kept on this device, and synced across devices if you sign in."
         back={{ href: '/about', label: 'More' }}
       />
-      <div className="mt-6 px-4 sm:px-6">
+      <div className="mt-6 space-y-5 px-4 sm:px-6">
+        <div className="rounded-card glass p-5">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
+            Your journey so far
+          </p>
+          <ProfileStats acts={meta} />
+        </div>
+
         {AUTH_ENABLED ? (
           <AccountClient />
         ) : (
-          <div className="rounded-card glass-strong p-6 text-center">
-            <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/8 text-ink-muted">
-              <Icon name="info" size={24} aria-hidden />
-            </span>
-            <h2 className="font-display text-xl text-ink">Sign-in isn't enabled yet</h2>
-            <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-ink-muted">
-              For now, everything you save lives privately on this device. Once Google sign-in is
-              configured, you'll be able to back up and sync your journey here.
+          <div className="rounded-card glass-soft p-5 text-center">
+            <Icon name="info" size={22} aria-hidden className="mx-auto mb-2 text-ink-muted" />
+            <p className="text-sm leading-relaxed text-ink-muted">
+              Everything is saved privately on this device. Cross-device sign-in can be enabled
+              later — until then, your journey lives here.
             </p>
           </div>
         )}
+
+        <SectionPanel id="prayer" eyebrow="Lift them up" title="Prayer journal" icon="sparkles">
+          <PrayerJournal />
+        </SectionPanel>
       </div>
     </main>
   );
